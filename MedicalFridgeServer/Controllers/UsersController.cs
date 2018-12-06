@@ -1,119 +1,146 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.Http.Description;
 using MedicalFridgeServer.Models;
 
 namespace MedicalFridgeServer.Controllers
 {
-    public class UsersController : ApiController
+    public class UsersController : System.Web.Http.ApiController
     {
         private MedicalFridgeDBEntities1 db = new MedicalFridgeDBEntities1();
 
         // GET: api/Users
-        public IQueryable<User> GetUsers()
+        public HttpResponseMessage GetUsers()
         {
-            return db.Users;
+            var users = (from User in db.Users
+                         select new
+                         {
+                             User.IdUser,
+                             User.Login,
+                             User.Password,
+                             User.Role,
+                             User.NameOrganization,
+                             User.Phone,
+                             User.Country,
+                             User.City,
+                             User.Address
+                         });
+            return GetInfo(users);
         }
 
-        // GET: api/Users/5
-        [ResponseType(typeof(User))]
-        public async Task<IHttpActionResult> GetUser(int id)
+        // GET: api/Users/id
+        public HttpResponseMessage GetUser(int id)
         {
-            User user = await db.Users.FindAsync(id);
-            if (user == null)
-            {
-                return NotFound();
-            }
+            var user = (from User in db.Users
+                        select new
+                        {
+                            User.IdUser,
+                            User.Login,
+                            User.Password,
+                            User.Role,
+                            User.NameOrganization,
+                            User.Phone,
+                            User.Country,
+                            User.City,
+                            User.Address
+                        }).Where(u => u.IdUser == id);
 
-            return Ok(user);
+            return GetInfo(user);
         }
 
-        // PUT: api/Users/5
-        [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutUser(int id, User user)
+        // GET: api/Users/value1/value2
+        public HttpResponseMessage GetUserPass(string value1, string value2)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            var user = (from User in db.Users
+                        select new
+                        {
+                            User.IdUser,
+                            User.Login,
+                            User.Password,
+                            User.Role,
+                            User.NameOrganization,
+                            User.Phone,
+                            User.Country,
+                            User.City,
+                            User.Address
+                        }).Where(i => (i.Login.Trim() == value1.Trim()) && (i.Password.Trim() == value2.Trim()));
 
+            return GetInfo(user);
+        }
+
+        // PUT: api/Users/id
+        public bool PutUser(int id, User user)
+        {
             if (id != user.IdUser)
-            {
-                return BadRequest();
-            }
+                return false;
 
             db.Entry(user).State = EntityState.Modified;
 
             try
             {
-                await db.SaveChangesAsync();
+                db.SaveChanges();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!UserExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return false;
             }
 
-            return StatusCode(HttpStatusCode.NoContent);
+            return true;
         }
 
         // POST: api/Users
-        [ResponseType(typeof(User))]
-        public async Task<IHttpActionResult> PostUser(User user)
+        public bool PostUser(User user)
         {
-            if (!ModelState.IsValid)
+            var c = (from User in db.Users
+                     select new { User.Login }
+                     ).Where(i => (i.Login.Trim() == user.Login.Trim()));
+
+            if (c.Count() == 0)
             {
-                return BadRequest(ModelState);
+                db.Users.Add(user);
+                db.SaveChanges();
             }
+            else
+                return false;
 
-            db.Users.Add(user);
-            await db.SaveChangesAsync();
-
-            return CreatedAtRoute("DefaultApi", new { id = user.IdUser }, user);
+            return true;
         }
 
-        // DELETE: api/Users/5
-        [ResponseType(typeof(User))]
-        public async Task<IHttpActionResult> DeleteUser(int id)
+        // DELETE: api/Users/id
+        public bool DeleteUser(int id)
         {
-            User user = await db.Users.FindAsync(id);
-            if (user == null)
-            {
-                return NotFound();
-            }
+            User user = db.Users.Find(id);
 
-            db.Users.Remove(user);
-            await db.SaveChangesAsync();
+            if (user != null)
+                db.Users.Remove(user);
+            else
+                return false;
 
-            return Ok(user);
+            return true;
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
 
-        private bool UserExists(int id)
+        private HttpResponseMessage GetInfo(IQueryable u)
         {
-            return db.Users.Count(e => e.IdUser == id) > 0;
+            try
+            {
+                if (db.Users.Count() != 0)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, u);
+                }
+                else
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, "User list is empty");
+                }
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
+            }
         }
     }
 }

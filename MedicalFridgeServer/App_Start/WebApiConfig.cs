@@ -19,6 +19,16 @@ namespace MedicalFridgeServer
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
+
+            config.Routes.MapHttpRoute(
+                name: "MyApi1",
+                routeTemplate: "api/{controller}/{value}/"
+            );
+
+            config.Routes.MapHttpRoute(
+                name: "MyApi2",
+                routeTemplate: "api/{controller}/{value1}/{value2}"
+            );
         }
     }
 }
