@@ -13,44 +13,44 @@ using MedicalFridgeServer.Models;
 
 namespace MedicalFridgeServer.Controllers
 {
-    public class FridgesController : ApiController
+    public class IndicatorsController : ApiController
     {
         private MedicalFridgeDBEntities1 db = new MedicalFridgeDBEntities1();
 
-        // GET: api/Fridges
-        public IQueryable<Fridge> GetFridges()
+        // GET: api/Indicators
+        public IQueryable<Indicator> GetIndicators()
         {
-            return db.Fridges;
+            return db.Indicators;
         }
 
-        // GET: api/Fridges/5
-        [ResponseType(typeof(Fridge))]
-        public async Task<IHttpActionResult> GetFridge(int id)
+        // GET: api/Indicators/5
+        [ResponseType(typeof(Indicator))]
+        public async Task<IHttpActionResult> GetIndicator(int id)
         {
-            Fridge fridge = await db.Fridges.FindAsync(id);
-            if (fridge == null)
+            Indicator indicator = await db.Indicators.FindAsync(id);
+            if (indicator == null)
             {
                 return NotFound();
             }
 
-            return Ok(fridge);
+            return Ok(indicator);
         }
 
-        // PUT: api/Fridges/5
+        // PUT: api/Indicators/5
         [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutFridge(int id, Fridge fridge)
+        public async Task<IHttpActionResult> PutIndicator(int id, Indicator indicator)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != fridge.IdFridge)
+            if (id != indicator.IdIndicators)
             {
                 return BadRequest();
             }
 
-            db.Entry(fridge).State = EntityState.Modified;
+            db.Entry(indicator).State = EntityState.Modified;
 
             try
             {
@@ -58,7 +58,7 @@ namespace MedicalFridgeServer.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!FridgeExists(id))
+                if (!IndicatorExists(id))
                 {
                     return NotFound();
                 }
@@ -71,35 +71,35 @@ namespace MedicalFridgeServer.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST: api/Fridges
-        [ResponseType(typeof(Fridge))]
-        public async Task<IHttpActionResult> PostFridge(Fridge fridge)
+        // POST: api/Indicators
+        [ResponseType(typeof(Indicator))]
+        public async Task<IHttpActionResult> PostIndicator(Indicator indicator)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            db.Fridges.Add(fridge);
+            db.Indicators.Add(indicator);
             await db.SaveChangesAsync();
 
-            return CreatedAtRoute("DefaultApi", new { id = fridge.IdFridge }, fridge);
+            return CreatedAtRoute("DefaultApi", new { id = indicator.IdIndicators }, indicator);
         }
 
-        // DELETE: api/Fridges/5
-        [ResponseType(typeof(Fridge))]
-        public async Task<IHttpActionResult> DeleteFridge(int id)
+        // DELETE: api/Indicators/5
+        [ResponseType(typeof(Indicator))]
+        public async Task<IHttpActionResult> DeleteIndicator(int id)
         {
-            Fridge fridge = await db.Fridges.FindAsync(id);
-            if (fridge == null)
+            Indicator indicator = await db.Indicators.FindAsync(id);
+            if (indicator == null)
             {
                 return NotFound();
             }
 
-            db.Fridges.Remove(fridge);
+            db.Indicators.Remove(indicator);
             await db.SaveChangesAsync();
 
-            return Ok(fridge);
+            return Ok(indicator);
         }
 
         protected override void Dispose(bool disposing)
@@ -111,9 +111,9 @@ namespace MedicalFridgeServer.Controllers
             base.Dispose(disposing);
         }
 
-        private bool FridgeExists(int id)
+        private bool IndicatorExists(int id)
         {
-            return db.Fridges.Count(e => e.IdFridge == id) > 0;
+            return db.Indicators.Count(e => e.IdIndicators == id) > 0;
         }
     }
 }

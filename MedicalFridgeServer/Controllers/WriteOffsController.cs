@@ -13,44 +13,44 @@ using MedicalFridgeServer.Models;
 
 namespace MedicalFridgeServer.Controllers
 {
-    public class FridgesController : ApiController
+    public class WriteOffsController : ApiController
     {
         private MedicalFridgeDBEntities1 db = new MedicalFridgeDBEntities1();
 
-        // GET: api/Fridges
-        public IQueryable<Fridge> GetFridges()
+        // GET: api/WriteOffs
+        public IQueryable<WriteOff> GetWriteOffs()
         {
-            return db.Fridges;
+            return db.WriteOffs;
         }
 
-        // GET: api/Fridges/5
-        [ResponseType(typeof(Fridge))]
-        public async Task<IHttpActionResult> GetFridge(int id)
+        // GET: api/WriteOffs/5
+        [ResponseType(typeof(WriteOff))]
+        public async Task<IHttpActionResult> GetWriteOff(int id)
         {
-            Fridge fridge = await db.Fridges.FindAsync(id);
-            if (fridge == null)
+            WriteOff writeOff = await db.WriteOffs.FindAsync(id);
+            if (writeOff == null)
             {
                 return NotFound();
             }
 
-            return Ok(fridge);
+            return Ok(writeOff);
         }
 
-        // PUT: api/Fridges/5
+        // PUT: api/WriteOffs/5
         [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutFridge(int id, Fridge fridge)
+        public async Task<IHttpActionResult> PutWriteOff(int id, WriteOff writeOff)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != fridge.IdFridge)
+            if (id != writeOff.IdWriteOff)
             {
                 return BadRequest();
             }
 
-            db.Entry(fridge).State = EntityState.Modified;
+            db.Entry(writeOff).State = EntityState.Modified;
 
             try
             {
@@ -58,7 +58,7 @@ namespace MedicalFridgeServer.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!FridgeExists(id))
+                if (!WriteOffExists(id))
                 {
                     return NotFound();
                 }
@@ -71,35 +71,35 @@ namespace MedicalFridgeServer.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST: api/Fridges
-        [ResponseType(typeof(Fridge))]
-        public async Task<IHttpActionResult> PostFridge(Fridge fridge)
+        // POST: api/WriteOffs
+        [ResponseType(typeof(WriteOff))]
+        public async Task<IHttpActionResult> PostWriteOff(WriteOff writeOff)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            db.Fridges.Add(fridge);
+            db.WriteOffs.Add(writeOff);
             await db.SaveChangesAsync();
 
-            return CreatedAtRoute("DefaultApi", new { id = fridge.IdFridge }, fridge);
+            return CreatedAtRoute("DefaultApi", new { id = writeOff.IdWriteOff }, writeOff);
         }
 
-        // DELETE: api/Fridges/5
-        [ResponseType(typeof(Fridge))]
-        public async Task<IHttpActionResult> DeleteFridge(int id)
+        // DELETE: api/WriteOffs/5
+        [ResponseType(typeof(WriteOff))]
+        public async Task<IHttpActionResult> DeleteWriteOff(int id)
         {
-            Fridge fridge = await db.Fridges.FindAsync(id);
-            if (fridge == null)
+            WriteOff writeOff = await db.WriteOffs.FindAsync(id);
+            if (writeOff == null)
             {
                 return NotFound();
             }
 
-            db.Fridges.Remove(fridge);
+            db.WriteOffs.Remove(writeOff);
             await db.SaveChangesAsync();
 
-            return Ok(fridge);
+            return Ok(writeOff);
         }
 
         protected override void Dispose(bool disposing)
@@ -111,9 +111,9 @@ namespace MedicalFridgeServer.Controllers
             base.Dispose(disposing);
         }
 
-        private bool FridgeExists(int id)
+        private bool WriteOffExists(int id)
         {
-            return db.Fridges.Count(e => e.IdFridge == id) > 0;
+            return db.WriteOffs.Count(e => e.IdWriteOff == id) > 0;
         }
     }
 }

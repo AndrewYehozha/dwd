@@ -1,0 +1,359 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Хранилище MedicalFridgeDBModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Fridges">
+          <Key>
+            <PropertyRef Name="IdFridge" />
+          </Key>
+          <Property Name="IdFridge" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdUser" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Indicators">
+          <Key>
+            <PropertyRef Name="IdIndicators" />
+          </Key>
+          <Property Name="IdIndicators" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdFridge" Type="int" Nullable="false" />
+          <Property Name="Temperature" Type="decimal" Precision="18" Scale="3" />
+          <Property Name="Humidity" Type="decimal" Precision="18" Scale="3" />
+          <Property Name="DataTime" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Medicaments">
+          <Key>
+            <PropertyRef Name="IdMedicament" />
+          </Key>
+          <Property Name="IdMedicament" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdFridge" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nchar" MaxLength="40" Nullable="false" />
+          <Property Name="Amount" Type="int" Nullable="false" />
+          <Property Name="DataProduction" Type="datetime" Nullable="false" />
+          <Property Name="ExpirationDate" Type="datetime" Nullable="false" />
+          <Property Name="Price" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Information" Type="nchar" MaxLength="300" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="IdUser" />
+          </Key>
+          <Property Name="IdUser" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Login" Type="nchar" MaxLength="50" Nullable="false" />
+          <Property Name="Password" Type="nchar" MaxLength="20" Nullable="false" />
+          <Property Name="NameOrganization" Type="nchar" MaxLength="20" Nullable="false" />
+          <Property Name="Role" Type="nchar" MaxLength="20" Nullable="false" />
+          <Property Name="Country" Type="nchar" MaxLength="10" />
+          <Property Name="City" Type="nchar" MaxLength="10" />
+          <Property Name="Address" Type="nchar" MaxLength="10" />
+          <Property Name="Phone" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="WriteOff">
+          <Key>
+            <PropertyRef Name="IdWriteOff" />
+          </Key>
+          <Property Name="IdWriteOff" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdMedicament" Type="int" Nullable="false" />
+          <Property Name="DataWriteOff" Type="datetime" Nullable="false" />
+          <Property Name="Amount" Type="int" Nullable="false" />
+          <Property Name="Price" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Fridges_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Fridges" Type="Self.Fridges" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="IdUser" />
+            </Principal>
+            <Dependent Role="Fridges">
+              <PropertyRef Name="IdUser" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Indicators_Fridges">
+          <End Role="Fridges" Type="Self.Fridges" Multiplicity="1" />
+          <End Role="Indicators" Type="Self.Indicators" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Fridges">
+              <PropertyRef Name="IdFridge" />
+            </Principal>
+            <Dependent Role="Indicators">
+              <PropertyRef Name="IdFridge" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Medicaments_Fridges">
+          <End Role="Fridges" Type="Self.Fridges" Multiplicity="1" />
+          <End Role="Medicaments" Type="Self.Medicaments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Fridges">
+              <PropertyRef Name="IdFridge" />
+            </Principal>
+            <Dependent Role="Medicaments">
+              <PropertyRef Name="IdFridge" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WriteOff_Medicaments">
+          <End Role="Medicaments" Type="Self.Medicaments" Multiplicity="1" />
+          <End Role="WriteOff" Type="Self.WriteOff" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Medicaments">
+              <PropertyRef Name="IdMedicament" />
+            </Principal>
+            <Dependent Role="WriteOff">
+              <PropertyRef Name="IdMedicament" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Хранилище MedicalFridgeDBModelContainer">
+          <EntitySet Name="Fridges" EntityType="Self.Fridges" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Indicators" EntityType="Self.Indicators" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Medicaments" EntityType="Self.Medicaments" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="WriteOff" EntityType="Self.WriteOff" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Fridges_Users" Association="Self.FK_Fridges_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Fridges" EntitySet="Fridges" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Indicators_Fridges" Association="Self.FK_Indicators_Fridges">
+            <End Role="Fridges" EntitySet="Fridges" />
+            <End Role="Indicators" EntitySet="Indicators" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Medicaments_Fridges" Association="Self.FK_Medicaments_Fridges">
+            <End Role="Fridges" EntitySet="Fridges" />
+            <End Role="Medicaments" EntitySet="Medicaments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WriteOff_Medicaments" Association="Self.FK_WriteOff_Medicaments">
+            <End Role="Medicaments" EntitySet="Medicaments" />
+            <End Role="WriteOff" EntitySet="WriteOff" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="MedicalFridgeDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Fridge">
+          <Key>
+            <PropertyRef Name="IdFridge" />
+          </Key>
+          <Property Name="IdFridge" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdUser" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="User" Relationship="Self.FK_Fridges_Users" FromRole="Fridges" ToRole="Users" />
+          <NavigationProperty Name="Indicators" Relationship="Self.FK_Indicators_Fridges" FromRole="Fridges" ToRole="Indicators" />
+          <NavigationProperty Name="Medicaments" Relationship="Self.FK_Medicaments_Fridges" FromRole="Fridges" ToRole="Medicaments" />
+        </EntityType>
+        <EntityType Name="Indicator">
+          <Key>
+            <PropertyRef Name="IdIndicators" />
+          </Key>
+          <Property Name="IdIndicators" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdFridge" Type="Int32" Nullable="false" />
+          <Property Name="Temperature" Type="Decimal" Precision="18" Scale="3" />
+          <Property Name="Humidity" Type="Decimal" Precision="18" Scale="3" />
+          <Property Name="DataTime" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Fridge" Relationship="Self.FK_Indicators_Fridges" FromRole="Indicators" ToRole="Fridges" />
+        </EntityType>
+        <EntityType Name="Medicament">
+          <Key>
+            <PropertyRef Name="IdMedicament" />
+          </Key>
+          <Property Name="IdMedicament" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdFridge" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="40" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="Amount" Type="Int32" Nullable="false" />
+          <Property Name="DataProduction" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ExpirationDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Price" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Information" Type="String" MaxLength="300" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="Fridge" Relationship="Self.FK_Medicaments_Fridges" FromRole="Medicaments" ToRole="Fridges" />
+          <NavigationProperty Name="WriteOffs" Relationship="Self.FK_WriteOff_Medicaments" FromRole="Medicaments" ToRole="WriteOff" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="IdUser" />
+          </Key>
+          <Property Name="IdUser" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Login" Type="String" MaxLength="50" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="20" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="NameOrganization" Type="String" MaxLength="20" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="Role" Type="String" MaxLength="20" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="Country" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="City" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Address" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Phone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Fridges" Relationship="Self.FK_Fridges_Users" FromRole="Users" ToRole="Fridges" />
+        </EntityType>
+        <EntityType Name="WriteOff">
+          <Key>
+            <PropertyRef Name="IdWriteOff" />
+          </Key>
+          <Property Name="IdWriteOff" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdMedicament" Type="Int32" Nullable="false" />
+          <Property Name="DataWriteOff" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Amount" Type="Int32" Nullable="false" />
+          <Property Name="Price" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <NavigationProperty Name="Medicament" Relationship="Self.FK_WriteOff_Medicaments" FromRole="WriteOff" ToRole="Medicaments" />
+        </EntityType>
+        <Association Name="FK_Fridges_Users">
+          <End Role="Users" Type="Self.User" Multiplicity="1" />
+          <End Role="Fridges" Type="Self.Fridge" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="IdUser" />
+            </Principal>
+            <Dependent Role="Fridges">
+              <PropertyRef Name="IdUser" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Indicators_Fridges">
+          <End Role="Fridges" Type="Self.Fridge" Multiplicity="1" />
+          <End Role="Indicators" Type="Self.Indicator" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Fridges">
+              <PropertyRef Name="IdFridge" />
+            </Principal>
+            <Dependent Role="Indicators">
+              <PropertyRef Name="IdFridge" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Medicaments_Fridges">
+          <End Role="Fridges" Type="Self.Fridge" Multiplicity="1" />
+          <End Role="Medicaments" Type="Self.Medicament" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Fridges">
+              <PropertyRef Name="IdFridge" />
+            </Principal>
+            <Dependent Role="Medicaments">
+              <PropertyRef Name="IdFridge" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WriteOff_Medicaments">
+          <End Role="Medicaments" Type="Self.Medicament" Multiplicity="1" />
+          <End Role="WriteOff" Type="Self.WriteOff" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Medicaments">
+              <PropertyRef Name="IdMedicament" />
+            </Principal>
+            <Dependent Role="WriteOff">
+              <PropertyRef Name="IdMedicament" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="MedicalFridgeDBEntities1" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Fridges" EntityType="Self.Fridge" />
+          <EntitySet Name="Indicators" EntityType="Self.Indicator" />
+          <EntitySet Name="Medicaments" EntityType="Self.Medicament" />
+          <EntitySet Name="Users" EntityType="Self.User" />
+          <EntitySet Name="WriteOffs" EntityType="Self.WriteOff" />
+          <AssociationSet Name="FK_Fridges_Users" Association="Self.FK_Fridges_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Fridges" EntitySet="Fridges" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Indicators_Fridges" Association="Self.FK_Indicators_Fridges">
+            <End Role="Fridges" EntitySet="Fridges" />
+            <End Role="Indicators" EntitySet="Indicators" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Medicaments_Fridges" Association="Self.FK_Medicaments_Fridges">
+            <End Role="Fridges" EntitySet="Fridges" />
+            <End Role="Medicaments" EntitySet="Medicaments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WriteOff_Medicaments" Association="Self.FK_WriteOff_Medicaments">
+            <End Role="Medicaments" EntitySet="Medicaments" />
+            <End Role="WriteOff" EntitySet="WriteOffs" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище MedicalFridgeDBModelContainer" CdmEntityContainer="MedicalFridgeDBEntities1">
+          <EntitySetMapping Name="Fridges">
+            <EntityTypeMapping TypeName="MedicalFridgeDBModel.Fridge">
+              <MappingFragment StoreEntitySet="Fridges">
+                <ScalarProperty Name="IdFridge" ColumnName="IdFridge" />
+                <ScalarProperty Name="IdUser" ColumnName="IdUser" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Indicators">
+            <EntityTypeMapping TypeName="MedicalFridgeDBModel.Indicator">
+              <MappingFragment StoreEntitySet="Indicators">
+                <ScalarProperty Name="IdIndicators" ColumnName="IdIndicators" />
+                <ScalarProperty Name="IdFridge" ColumnName="IdFridge" />
+                <ScalarProperty Name="Temperature" ColumnName="Temperature" />
+                <ScalarProperty Name="Humidity" ColumnName="Humidity" />
+                <ScalarProperty Name="DataTime" ColumnName="DataTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Medicaments">
+            <EntityTypeMapping TypeName="MedicalFridgeDBModel.Medicament">
+              <MappingFragment StoreEntitySet="Medicaments">
+                <ScalarProperty Name="IdMedicament" ColumnName="IdMedicament" />
+                <ScalarProperty Name="IdFridge" ColumnName="IdFridge" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="DataProduction" ColumnName="DataProduction" />
+                <ScalarProperty Name="ExpirationDate" ColumnName="ExpirationDate" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="Information" ColumnName="Information" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="MedicalFridgeDBModel.User">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="IdUser" ColumnName="IdUser" />
+                <ScalarProperty Name="Login" ColumnName="Login" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="NameOrganization" ColumnName="NameOrganization" />
+                <ScalarProperty Name="Role" ColumnName="Role" />
+                <ScalarProperty Name="Country" ColumnName="Country" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WriteOffs">
+            <EntityTypeMapping TypeName="MedicalFridgeDBModel.WriteOff">
+              <MappingFragment StoreEntitySet="WriteOff">
+                <ScalarProperty Name="IdWriteOff" ColumnName="IdWriteOff" />
+                <ScalarProperty Name="IdMedicament" ColumnName="IdMedicament" />
+                <ScalarProperty Name="DataWriteOff" ColumnName="DataWriteOff" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

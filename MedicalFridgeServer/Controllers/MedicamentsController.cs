@@ -13,44 +13,44 @@ using MedicalFridgeServer.Models;
 
 namespace MedicalFridgeServer.Controllers
 {
-    public class FridgesController : ApiController
+    public class MedicamentsController : ApiController
     {
         private MedicalFridgeDBEntities1 db = new MedicalFridgeDBEntities1();
 
-        // GET: api/Fridges
-        public IQueryable<Fridge> GetFridges()
+        // GET: api/Medicaments
+        public IQueryable<Medicament> GetMedicaments()
         {
-            return db.Fridges;
+            return db.Medicaments;
         }
 
-        // GET: api/Fridges/5
-        [ResponseType(typeof(Fridge))]
-        public async Task<IHttpActionResult> GetFridge(int id)
+        // GET: api/Medicaments/5
+        [ResponseType(typeof(Medicament))]
+        public async Task<IHttpActionResult> GetMedicament(int id)
         {
-            Fridge fridge = await db.Fridges.FindAsync(id);
-            if (fridge == null)
+            Medicament medicament = await db.Medicaments.FindAsync(id);
+            if (medicament == null)
             {
                 return NotFound();
             }
 
-            return Ok(fridge);
+            return Ok(medicament);
         }
 
-        // PUT: api/Fridges/5
+        // PUT: api/Medicaments/5
         [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutFridge(int id, Fridge fridge)
+        public async Task<IHttpActionResult> PutMedicament(int id, Medicament medicament)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != fridge.IdFridge)
+            if (id != medicament.IdMedicament)
             {
                 return BadRequest();
             }
 
-            db.Entry(fridge).State = EntityState.Modified;
+            db.Entry(medicament).State = EntityState.Modified;
 
             try
             {
@@ -58,7 +58,7 @@ namespace MedicalFridgeServer.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!FridgeExists(id))
+                if (!MedicamentExists(id))
                 {
                     return NotFound();
                 }
@@ -71,35 +71,35 @@ namespace MedicalFridgeServer.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST: api/Fridges
-        [ResponseType(typeof(Fridge))]
-        public async Task<IHttpActionResult> PostFridge(Fridge fridge)
+        // POST: api/Medicaments
+        [ResponseType(typeof(Medicament))]
+        public async Task<IHttpActionResult> PostMedicament(Medicament medicament)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            db.Fridges.Add(fridge);
+            db.Medicaments.Add(medicament);
             await db.SaveChangesAsync();
 
-            return CreatedAtRoute("DefaultApi", new { id = fridge.IdFridge }, fridge);
+            return CreatedAtRoute("DefaultApi", new { id = medicament.IdMedicament }, medicament);
         }
 
-        // DELETE: api/Fridges/5
-        [ResponseType(typeof(Fridge))]
-        public async Task<IHttpActionResult> DeleteFridge(int id)
+        // DELETE: api/Medicaments/5
+        [ResponseType(typeof(Medicament))]
+        public async Task<IHttpActionResult> DeleteMedicament(int id)
         {
-            Fridge fridge = await db.Fridges.FindAsync(id);
-            if (fridge == null)
+            Medicament medicament = await db.Medicaments.FindAsync(id);
+            if (medicament == null)
             {
                 return NotFound();
             }
 
-            db.Fridges.Remove(fridge);
+            db.Medicaments.Remove(medicament);
             await db.SaveChangesAsync();
 
-            return Ok(fridge);
+            return Ok(medicament);
         }
 
         protected override void Dispose(bool disposing)
@@ -111,9 +111,9 @@ namespace MedicalFridgeServer.Controllers
             base.Dispose(disposing);
         }
 
-        private bool FridgeExists(int id)
+        private bool MedicamentExists(int id)
         {
-            return db.Fridges.Count(e => e.IdFridge == id) > 0;
+            return db.Medicaments.Count(e => e.IdMedicament == id) > 0;
         }
     }
 }

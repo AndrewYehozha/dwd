@@ -32,6 +32,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -41,6 +42,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -89,58 +91,72 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
-    <Content Include="Models\ModelMedicalFridgeDB.Context.tt">
+    <Content Include="Models\MedicalFridgeModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>ModelMedicalFridgeDB.Context.cs</LastGenOutput>
-      <DependentUpon>ModelMedicalFridgeDB.edmx</DependentUpon>
+      <DependentUpon>MedicalFridgeModel.edmx</DependentUpon>
+      <LastGenOutput>MedicalFridgeModel.Context.cs</LastGenOutput>
     </Content>
-    <Content Include="Models\ModelMedicalFridgeDB.tt">
+    <Content Include="Models\MedicalFridgeModel.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>ModelMedicalFridgeDB.edmx</DependentUpon>
-      <LastGenOutput>ModelMedicalFridgeDB.cs</LastGenOutput>
+      <DependentUpon>MedicalFridgeModel.edmx</DependentUpon>
+      <LastGenOutput>MedicalFridgeModel.cs</LastGenOutput>
     </Content>
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\FridgesController.cs" />
+    <Compile Include="Controllers\IndicatorsController.cs" />
+    <Compile Include="Controllers\MedicamentsController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
+    <Compile Include="Controllers\WriteOffsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Fridge.cs">
-      <DependentUpon>ModelMedicalFridgeDB.tt</DependentUpon>
+      <DependentUpon>MedicalFridgeModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\ModelMedicalFridgeDB.Context.cs">
+    <Compile Include="Models\Indicator.cs">
+      <DependentUpon>MedicalFridgeModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\MedicalFridgeModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>ModelMedicalFridgeDB.Context.tt</DependentUpon>
+      <DependentUpon>MedicalFridgeModel.Context.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\ModelMedicalFridgeDB.cs">
+    <Compile Include="Models\MedicalFridgeModel.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>ModelMedicalFridgeDB.tt</DependentUpon>
+      <DependentUpon>MedicalFridgeModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\ModelMedicalFridgeDB.Designer.cs">
+    <Compile Include="Models\MedicalFridgeModel.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>ModelMedicalFridgeDB.edmx</DependentUpon>
+      <DependentUpon>MedicalFridgeModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Medicament.cs">
+      <DependentUpon>MedicalFridgeModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\User.cs">
-      <DependentUpon>ModelMedicalFridgeDB.tt</DependentUpon>
+      <DependentUpon>MedicalFridgeModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\WriteOff.cs">
+      <DependentUpon>MedicalFridgeModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EntityDeploy Include="Models\ModelMedicalFridgeDB.edmx">
+    <EntityDeploy Include="Models\MedicalFridgeModel.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>ModelMedicalFridgeDB.Designer.cs</LastGenOutput>
+      <LastGenOutput>MedicalFridgeModel.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <Content Include="Models\ModelMedicalFridgeDB.edmx.diagram">
-      <DependentUpon>ModelMedicalFridgeDB.edmx</DependentUpon>
+    <Content Include="Models\MedicalFridgeModel.edmx.diagram">
+      <DependentUpon>MedicalFridgeModel.edmx</DependentUpon>
     </Content>
     <None Include="packages.config" />
     <None Include="Properties\PublishProfiles\MedicalFridgeServer - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\MedicalFridgeServer - Web Deploy1.pubxml" />
+    <None Include="Properties\PublishProfiles\MedicalFridgeServer - Web Deploy2.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -167,9 +183,9 @@
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>43800</DevelopmentServerPort>
+          <DevelopmentServerPort>0</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:43800/</IISUrl>
+          <IISUrl>http://localhost:10554/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

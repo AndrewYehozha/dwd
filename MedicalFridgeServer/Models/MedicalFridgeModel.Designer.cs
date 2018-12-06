@@ -1,4 +1,4 @@
-﻿// Создание кода T4 для модели "E:\Учеба\III-Курс\АРКПЗ\Курсач\Back_End\MedicalFridgeServer\MedicalFridgeServer\Models\ModelMedicalFridgeDB.edmx" включено. 
+﻿// Создание кода T4 для модели "D:\Учеба\III-Курс\АРКПЗ\Курсач\Back_End\MedicalFridgeServer\MedicalFridgeServer\Models\MedicalFridgeModel.edmx" включено. 
 // Чтобы включить формирование кода прежних версий, измените значение свойства "Стратегия создания кода" конструктора
 // на "Legacy ObjectContext". Это свойство доступно в окне "Свойства", если модель
 // открыта в конструкторе.

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="8391ae68373a4bb69fad03bed1a42ce9" Name="Diagram1">
+        <EntityTypeShape EntityType="MedicalFridgeDBModel.Fridge" Width="1.5" PointX="3" PointY="3" IsExpanded="true" />
+        <EntityTypeShape EntityType="MedicalFridgeDBModel.Indicator" Width="1.5" PointX="5.25" PointY="1.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="MedicalFridgeDBModel.Medicament" Width="1.5" PointX="5.25" PointY="4" IsExpanded="true" />
+        <EntityTypeShape EntityType="MedicalFridgeDBModel.User" Width="1.5" PointX="0.75" PointY="2.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="MedicalFridgeDBModel.WriteOff" Width="1.5" PointX="7.5" PointY="4.375" IsExpanded="true" />
+        <AssociationConnector Association="MedicalFridgeDBModel.FK_Fridges_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="MedicalFridgeDBModel.FK_Indicators_Fridges" ManuallyRouted="false" />
+        <AssociationConnector Association="MedicalFridgeDBModel.FK_Medicaments_Fridges" ManuallyRouted="false" />
+        <AssociationConnector Association="MedicalFridgeDBModel.FK_WriteOff_Medicaments" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
