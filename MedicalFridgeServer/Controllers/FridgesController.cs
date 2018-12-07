@@ -93,13 +93,13 @@ namespace MedicalFridgeServer.Controllers
         {
             try
             {
-                if (db.Users.Count() != 0)
+                if (db.Fridges.Count() != 0)
                 {
                     return Request.CreateResponse(HttpStatusCode.OK, f);
                 }
                 else
                 {
-                    return Request.CreateResponse(HttpStatusCode.OK, "Fridge list is empty");
+                    return Request.CreateResponse(HttpStatusCode.NoContent, "Fridges list is empty");
                 }
             }
             catch (Exception ex)

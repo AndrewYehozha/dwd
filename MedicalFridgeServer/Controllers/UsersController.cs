@@ -135,7 +135,7 @@ namespace MedicalFridgeServer.Controllers
                 }
                 else
                 {
-                    return Request.CreateResponse(HttpStatusCode.OK, "User list is empty");
+                    return Request.CreateResponse(HttpStatusCode.NoContent, "User list is empty");
                 }
             }
             catch (Exception ex)

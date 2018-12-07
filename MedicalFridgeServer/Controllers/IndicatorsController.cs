@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.Data.Entity.SqlServer;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -18,102 +20,94 @@ namespace MedicalFridgeServer.Controllers
         private MedicalFridgeDBEntities2 db = new MedicalFridgeDBEntities2();
 
         // GET: api/Indicators
-        public IQueryable<Indicator> GetIndicators()
+        public HttpResponseMessage GetIndicators()
         {
-            return db.Indicators;
+            var indicators = (from Indicator in db.Indicators
+                          select new
+                          {
+                              Indicator.IdIndicators,
+                              Indicator.IdFridge,
+                              Indicator.Temperature,
+                              Indicator.Humidity,
+                              Indicator.DataTime
+                          });
+
+            return GetInfo(indicators);
         }
 
-        // GET: api/Indicators/5
-        [ResponseType(typeof(Indicator))]
-        public async Task<IHttpActionResult> GetIndicator(int id)
+        // GET: api/Indicators/{IdFridge}
+        public HttpResponseMessage GetIndicator(int id)
         {
-            Indicator indicator = await db.Indicators.FindAsync(id);
-            if (indicator == null)
-            {
-                return NotFound();
-            }
+            var indicator = (from Indicator in db.Indicators
+                              select new
+                              {
+                                  Indicator.IdIndicators,
+                                  Indicator.IdFridge,
+                                  Indicator.Temperature,
+                                  Indicator.Humidity,
+                                  Indicator.DataTime
+                              }).Where(i => i.IdFridge == id);
 
-            return Ok(indicator);
+            return GetInfo(indicator);
         }
 
-        // PUT: api/Indicators/5
-        [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutIndicator(int id, Indicator indicator)
+        // GET: api/Indicators/?value={IdFridge}
+        public IEnumerable GetLastIndicator(int value)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            var indicator = (from Indicator in db.Indicators
+                             select new
+                             {
+                                 Indicator.IdIndicators,
+                                 Indicator.IdFridge,
+                                 Indicator.Temperature,
+                                 Indicator.Humidity
+                             }).Where(i => (i.IdFridge == value)).ToList();
 
-            if (id != indicator.IdIndicators)
-            {
-                return BadRequest();
-            }
+            yield return indicator[indicator.Count - 1];
+        }
 
-            db.Entry(indicator).State = EntityState.Modified;
+        // GET: api/Indicators/{IdFridge}/{Days}
+        public HttpResponseMessage GetIndicatorOfTime(int value1, int value2)
+        {
+            DateTime d = DateTime.Now.AddDays(-value2);
 
-            try
-            {
-                await db.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!IndicatorExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return StatusCode(HttpStatusCode.NoContent);
+            var indicator = (from Indicator in db.Indicators
+                             select new
+                             {
+                                 Indicator.IdIndicators,
+                                 Indicator.IdFridge,
+                                 Indicator.Temperature,
+                                 Indicator.Humidity,
+                                 Indicator.DataTime
+                             }).Where(i => (i.IdFridge == value1) && (i.DataTime > d));
+            
+            return GetInfo(indicator);
         }
 
         // POST: api/Indicators
-        [ResponseType(typeof(Indicator))]
-        public async Task<IHttpActionResult> PostIndicator(Indicator indicator)
+        public async void PostIndicator(Indicator indicator)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             db.Indicators.Add(indicator);
             await db.SaveChangesAsync();
-
-            return CreatedAtRoute("DefaultApi", new { id = indicator.IdIndicators }, indicator);
         }
 
-        // DELETE: api/Indicators/5
-        [ResponseType(typeof(Indicator))]
-        public async Task<IHttpActionResult> DeleteIndicator(int id)
+        private HttpResponseMessage GetInfo(IQueryable i)
         {
-            Indicator indicator = await db.Indicators.FindAsync(id);
-            if (indicator == null)
+            try
             {
-                return NotFound();
+                if (db.Indicators.Count() != 0)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, i);
+                }
+                else
+                {
+                    return Request.CreateResponse(HttpStatusCode.NoContent, "Indicators list is empty");
+                }
             }
-
-            db.Indicators.Remove(indicator);
-            await db.SaveChangesAsync();
-
-            return Ok(indicator);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
+            catch (Exception ex)
             {
-                db.Dispose();
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
             }
-            base.Dispose(disposing);
-        }
-
-        private bool IndicatorExists(int id)
-        {
-            return db.Indicators.Count(e => e.IdIndicators == id) > 0;
         }
     }
 }
