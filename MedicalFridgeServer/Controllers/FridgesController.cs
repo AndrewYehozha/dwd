@@ -15,105 +15,97 @@ namespace MedicalFridgeServer.Controllers
 {
     public class FridgesController : ApiController
     {
-        private MedicalFridgeDBEntities1 db = new MedicalFridgeDBEntities1();
+        private MedicalFridgeDBEntities2 db = new MedicalFridgeDBEntities2();
 
         // GET: api/Fridges
-        public IQueryable<Fridge> GetFridges()
+        public HttpResponseMessage GetFridges()
         {
-            return db.Fridges;
+            var fridge = (from Fridge in db.Fridges
+                          select new
+                          {
+                              Fridge.IdFridge,
+                              Fridge.IdUser,
+                              Fridge.SizeFridge.Size
+                          });
+
+            return GetInfo(fridge);
         }
 
-        // GET: api/Fridges/5
-        [ResponseType(typeof(Fridge))]
-        public async Task<IHttpActionResult> GetFridge(int id)
+        // GET: api/Fridges/id
+        public HttpResponseMessage GetFridge(int id)
         {
-            Fridge fridge = await db.Fridges.FindAsync(id);
-            if (fridge == null)
-            {
-                return NotFound();
-            }
+            var fridge = (from Fridge in db.Fridges
+                          select new
+                          {
+                              Fridge.IdFridge,
+                              Fridge.IdUser,
+                              Fridge.SizeFridge.Size
+                          }).Where(f => f.IdUser == id);
 
-            return Ok(fridge);
+            return GetInfo(fridge);
         }
 
-        // PUT: api/Fridges/5
-        [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutFridge(int id, Fridge fridge)
+        // PUT: api/Fridges/id
+        public bool PutFridge(int id, Fridge fridge)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             if (id != fridge.IdFridge)
-            {
-                return BadRequest();
-            }
+                return false;
 
             db.Entry(fridge).State = EntityState.Modified;
 
             try
             {
-                await db.SaveChangesAsync();
+                db.SaveChanges();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!FridgeExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return false;
             }
 
-            return StatusCode(HttpStatusCode.NoContent);
+            return true;
         }
 
         // POST: api/Fridges
-        [ResponseType(typeof(Fridge))]
-        public async Task<IHttpActionResult> PostFridge(Fridge fridge)
+        public bool PostFridge(Fridge fridge)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
+            fridge.IdFridge = 0;
             db.Fridges.Add(fridge);
-            await db.SaveChangesAsync();
+            db.SaveChanges();
 
-            return CreatedAtRoute("DefaultApi", new { id = fridge.IdFridge }, fridge);
+            return true;
         }
 
-        // DELETE: api/Fridges/5
-        [ResponseType(typeof(Fridge))]
-        public async Task<IHttpActionResult> DeleteFridge(int id)
+        // DELETE: api/Fridges/id
+        public bool DeleteFridge(int id)
         {
-            Fridge fridge = await db.Fridges.FindAsync(id);
+            Fridge fridge = db.Fridges.Find(id);
+
             if (fridge == null)
-            {
-                return NotFound();
-            }
+                return false;
 
             db.Fridges.Remove(fridge);
-            await db.SaveChangesAsync();
+            db.SaveChanges();
 
-            return Ok(fridge);
+            return true;
         }
 
-        protected override void Dispose(bool disposing)
+        private HttpResponseMessage GetInfo(IQueryable f)
         {
-            if (disposing)
+            try
             {
-                db.Dispose();
+                if (db.Users.Count() != 0)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, f);
+                }
+                else
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, "Fridge list is empty");
+                }
             }
-            base.Dispose(disposing);
-        }
-
-        private bool FridgeExists(int id)
-        {
-            return db.Fridges.Count(e => e.IdFridge == id) > 0;
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
+            }
         }
     }
 }

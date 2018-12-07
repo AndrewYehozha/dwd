@@ -15,7 +15,7 @@ namespace MedicalFridgeServer.Controllers
 {
     public class MedicamentsController : ApiController
     {
-        private MedicalFridgeDBEntities1 db = new MedicalFridgeDBEntities1();
+        private MedicalFridgeDBEntities2 db = new MedicalFridgeDBEntities2();
 
         // GET: api/Medicaments
         public IQueryable<Medicament> GetMedicaments()

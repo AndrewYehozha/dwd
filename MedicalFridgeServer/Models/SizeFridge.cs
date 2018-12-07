@@ -12,24 +12,18 @@ namespace MedicalFridgeServer.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Fridge
+    public partial class SizeFridge
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Fridge()
+        public SizeFridge()
         {
-            this.Indicators = new HashSet<Indicator>();
-            this.Medicaments = new HashSet<Medicament>();
+            this.Fridges = new HashSet<Fridge>();
         }
     
-        public int IdFridge { get; set; }
-        public int IdUser { get; set; }
-        public Nullable<int> IdSizeFridge { get; set; }
+        public int Id { get; set; }
+        public Nullable<int> Size { get; set; }
     
-        public virtual SizeFridge SizeFridge { get; set; }
-        public virtual User User { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Indicator> Indicators { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Medicament> Medicaments { get; set; }
+        public virtual ICollection<Fridge> Fridges { get; set; }
     }
 }

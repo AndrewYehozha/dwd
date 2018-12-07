@@ -11,7 +11,7 @@ namespace MedicalFridgeServer.Controllers
 {
     public class UsersController : System.Web.Http.ApiController
     {
-        private MedicalFridgeDBEntities1 db = new MedicalFridgeDBEntities1();
+        private MedicalFridgeDBEntities2 db = new MedicalFridgeDBEntities2();
 
         // GET: api/Users
         public HttpResponseMessage GetUsers()
@@ -29,6 +29,7 @@ namespace MedicalFridgeServer.Controllers
                              User.City,
                              User.Address
                          });
+
             return GetInfo(users);
         }
 
@@ -115,14 +116,14 @@ namespace MedicalFridgeServer.Controllers
         {
             User user = db.Users.Find(id);
 
-            if (user != null)
-                db.Users.Remove(user);
-            else
+            if (user == null)
                 return false;
+
+            db.Users.Remove(user);
+            db.SaveChanges();
 
             return true;
         }
-
 
         private HttpResponseMessage GetInfo(IQueryable u)
         {

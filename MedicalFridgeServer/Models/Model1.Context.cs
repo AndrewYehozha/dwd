@@ -13,10 +13,10 @@ namespace MedicalFridgeServer.Models
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class MedicalFridgeDBEntities1 : DbContext
+    public partial class MedicalFridgeDBEntities2 : DbContext
     {
-        public MedicalFridgeDBEntities1()
-            : base("name=MedicalFridgeDBEntities1")
+        public MedicalFridgeDBEntities2()
+            : base("name=MedicalFridgeDBEntities2")
         {
         }
     
@@ -28,6 +28,7 @@ namespace MedicalFridgeServer.Models
         public virtual DbSet<Fridge> Fridges { get; set; }
         public virtual DbSet<Indicator> Indicators { get; set; }
         public virtual DbSet<Medicament> Medicaments { get; set; }
+        public virtual DbSet<SizeFridge> SizeFridges { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<WriteOff> WriteOffs { get; set; }
     }

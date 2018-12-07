@@ -15,7 +15,7 @@ namespace MedicalFridgeServer.Controllers
 {
     public class IndicatorsController : ApiController
     {
-        private MedicalFridgeDBEntities1 db = new MedicalFridgeDBEntities1();
+        private MedicalFridgeDBEntities2 db = new MedicalFridgeDBEntities2();
 
         // GET: api/Indicators
         public IQueryable<Indicator> GetIndicators()

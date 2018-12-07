@@ -11,6 +11,7 @@
           </Key>
           <Property Name="IdFridge" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="IdUser" Type="int" Nullable="false" />
+          <Property Name="IdSizeFridge" Type="int" />
         </EntityType>
         <EntityType Name="Indicators">
           <Key>
@@ -35,18 +36,25 @@
           <Property Name="Price" Type="decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="Information" Type="nchar" MaxLength="300" />
         </EntityType>
+        <EntityType Name="SizeFridge">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Size" Type="int" />
+        </EntityType>
         <EntityType Name="Users">
           <Key>
             <PropertyRef Name="IdUser" />
           </Key>
           <Property Name="IdUser" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Login" Type="nchar" MaxLength="50" Nullable="false" />
-          <Property Name="Password" Type="nchar" MaxLength="20" Nullable="false" />
-          <Property Name="NameOrganization" Type="nchar" MaxLength="20" Nullable="false" />
+          <Property Name="Password" Type="nchar" MaxLength="40" Nullable="false" />
+          <Property Name="NameOrganization" Type="nchar" MaxLength="40" Nullable="false" />
           <Property Name="Role" Type="nchar" MaxLength="20" Nullable="false" />
-          <Property Name="Country" Type="nchar" MaxLength="10" />
-          <Property Name="City" Type="nchar" MaxLength="10" />
-          <Property Name="Address" Type="nchar" MaxLength="10" />
+          <Property Name="Country" Type="nchar" MaxLength="40" />
+          <Property Name="City" Type="nchar" MaxLength="40" />
+          <Property Name="Address" Type="nchar" MaxLength="40" />
           <Property Name="Phone" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="WriteOff">
@@ -59,6 +67,18 @@
           <Property Name="Amount" Type="int" Nullable="false" />
           <Property Name="Price" Type="decimal" Precision="18" Scale="2" Nullable="false" />
         </EntityType>
+        <Association Name="FK_Fridges_SizeFridge">
+          <End Role="SizeFridge" Type="Self.SizeFridge" Multiplicity="0..1" />
+          <End Role="Fridges" Type="Self.Fridges" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SizeFridge">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Fridges">
+              <PropertyRef Name="IdSizeFridge" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Fridges_Users">
           <End Role="Users" Type="Self.Users" Multiplicity="1" />
           <End Role="Fridges" Type="Self.Fridges" Multiplicity="*" />
@@ -111,8 +131,13 @@
           <EntitySet Name="Fridges" EntityType="Self.Fridges" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Indicators" EntityType="Self.Indicators" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Medicaments" EntityType="Self.Medicaments" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SizeFridge" EntityType="Self.SizeFridge" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="WriteOff" EntityType="Self.WriteOff" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Fridges_SizeFridge" Association="Self.FK_Fridges_SizeFridge">
+            <End Role="SizeFridge" EntitySet="SizeFridge" />
+            <End Role="Fridges" EntitySet="Fridges" />
+          </AssociationSet>
           <AssociationSet Name="FK_Fridges_Users" Association="Self.FK_Fridges_Users">
             <End Role="Users" EntitySet="Users" />
             <End Role="Fridges" EntitySet="Fridges" />
@@ -141,6 +166,8 @@
           </Key>
           <Property Name="IdFridge" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="IdUser" Type="Int32" Nullable="false" />
+          <Property Name="IdSizeFridge" Type="Int32" />
+          <NavigationProperty Name="SizeFridge" Relationship="Self.FK_Fridges_SizeFridge" FromRole="Fridges" ToRole="SizeFridge" />
           <NavigationProperty Name="User" Relationship="Self.FK_Fridges_Users" FromRole="Fridges" ToRole="Users" />
           <NavigationProperty Name="Indicators" Relationship="Self.FK_Indicators_Fridges" FromRole="Fridges" ToRole="Indicators" />
           <NavigationProperty Name="Medicaments" Relationship="Self.FK_Medicaments_Fridges" FromRole="Fridges" ToRole="Medicaments" />
@@ -171,18 +198,26 @@
           <NavigationProperty Name="Fridge" Relationship="Self.FK_Medicaments_Fridges" FromRole="Medicaments" ToRole="Fridges" />
           <NavigationProperty Name="WriteOffs" Relationship="Self.FK_WriteOff_Medicaments" FromRole="Medicaments" ToRole="WriteOff" />
         </EntityType>
+        <EntityType Name="SizeFridge">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Size" Type="Int32" />
+          <NavigationProperty Name="Fridges" Relationship="Self.FK_Fridges_SizeFridge" FromRole="SizeFridge" ToRole="Fridges" />
+        </EntityType>
         <EntityType Name="User">
           <Key>
             <PropertyRef Name="IdUser" />
           </Key>
           <Property Name="IdUser" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Login" Type="String" MaxLength="50" FixedLength="true" Unicode="true" Nullable="false" />
-          <Property Name="Password" Type="String" MaxLength="20" FixedLength="true" Unicode="true" Nullable="false" />
-          <Property Name="NameOrganization" Type="String" MaxLength="20" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="40" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="NameOrganization" Type="String" MaxLength="40" FixedLength="true" Unicode="true" Nullable="false" />
           <Property Name="Role" Type="String" MaxLength="20" FixedLength="true" Unicode="true" Nullable="false" />
-          <Property Name="Country" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
-          <Property Name="City" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
-          <Property Name="Address" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Country" Type="String" MaxLength="40" FixedLength="true" Unicode="true" />
+          <Property Name="City" Type="String" MaxLength="40" FixedLength="true" Unicode="true" />
+          <Property Name="Address" Type="String" MaxLength="40" FixedLength="true" Unicode="true" />
           <Property Name="Phone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Fridges" Relationship="Self.FK_Fridges_Users" FromRole="Users" ToRole="Fridges" />
         </EntityType>
@@ -197,6 +232,18 @@
           <Property Name="Price" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
           <NavigationProperty Name="Medicament" Relationship="Self.FK_WriteOff_Medicaments" FromRole="WriteOff" ToRole="Medicaments" />
         </EntityType>
+        <Association Name="FK_Fridges_SizeFridge">
+          <End Role="SizeFridge" Type="Self.SizeFridge" Multiplicity="0..1" />
+          <End Role="Fridges" Type="Self.Fridge" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SizeFridge">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Fridges">
+              <PropertyRef Name="IdSizeFridge" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Fridges_Users">
           <End Role="Users" Type="Self.User" Multiplicity="1" />
           <End Role="Fridges" Type="Self.Fridge" Multiplicity="*" />
@@ -245,12 +292,17 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="MedicalFridgeDBEntities1" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="MedicalFridgeDBEntities2" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Fridges" EntityType="Self.Fridge" />
           <EntitySet Name="Indicators" EntityType="Self.Indicator" />
           <EntitySet Name="Medicaments" EntityType="Self.Medicament" />
+          <EntitySet Name="SizeFridges" EntityType="Self.SizeFridge" />
           <EntitySet Name="Users" EntityType="Self.User" />
           <EntitySet Name="WriteOffs" EntityType="Self.WriteOff" />
+          <AssociationSet Name="FK_Fridges_SizeFridge" Association="Self.FK_Fridges_SizeFridge">
+            <End Role="SizeFridge" EntitySet="SizeFridges" />
+            <End Role="Fridges" EntitySet="Fridges" />
+          </AssociationSet>
           <AssociationSet Name="FK_Fridges_Users" Association="Self.FK_Fridges_Users">
             <End Role="Users" EntitySet="Users" />
             <End Role="Fridges" EntitySet="Fridges" />
@@ -273,12 +325,13 @@
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="Хранилище MedicalFridgeDBModelContainer" CdmEntityContainer="MedicalFridgeDBEntities1">
+        <EntityContainerMapping StorageEntityContainer="Хранилище MedicalFridgeDBModelContainer" CdmEntityContainer="MedicalFridgeDBEntities2">
           <EntitySetMapping Name="Fridges">
             <EntityTypeMapping TypeName="MedicalFridgeDBModel.Fridge">
               <MappingFragment StoreEntitySet="Fridges">
                 <ScalarProperty Name="IdFridge" ColumnName="IdFridge" />
                 <ScalarProperty Name="IdUser" ColumnName="IdUser" />
+                <ScalarProperty Name="IdSizeFridge" ColumnName="IdSizeFridge" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -304,6 +357,14 @@
                 <ScalarProperty Name="ExpirationDate" ColumnName="ExpirationDate" />
                 <ScalarProperty Name="Price" ColumnName="Price" />
                 <ScalarProperty Name="Information" ColumnName="Information" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SizeFridges">
+            <EntityTypeMapping TypeName="MedicalFridgeDBModel.SizeFridge">
+              <MappingFragment StoreEntitySet="SizeFridge">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Size" ColumnName="Size" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
