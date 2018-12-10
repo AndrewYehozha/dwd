@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Http.Description;
 using MedicalFridgeServer.Models;
 
 namespace MedicalFridgeServer.Controllers
@@ -68,9 +65,16 @@ namespace MedicalFridgeServer.Controllers
         // POST: api/Fridges
         public bool PostFridge(Fridge fridge)
         {
-            fridge.IdFridge = 0;
-            db.Fridges.Add(fridge);
-            db.SaveChanges();
+            try
+            {
+                fridge.IdFridge = 0;
+                db.Fridges.Add(fridge);
+                db.SaveChanges();
+            }
+            catch
+            {
+                return false;
+            }
 
             return true;
         }

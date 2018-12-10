@@ -18,102 +18,136 @@ namespace MedicalFridgeServer.Controllers
         private MedicalFridgeDBEntities2 db = new MedicalFridgeDBEntities2();
 
         // GET: api/WriteOffs
-        public IQueryable<WriteOff> GetWriteOffs()
+        public HttpResponseMessage GetWriteOffs()
         {
-            return db.WriteOffs;
+            var writeOff = (from WriteOff in db.WriteOffs
+                            select new
+                            {
+                                WriteOff.IdMedicament,
+                                WriteOff.IdWriteOff,
+                                WriteOff.Medicament.Name,
+                                WriteOff.Amount,
+                                WriteOff.Medicament.DataProduction,
+                                WriteOff.DataWriteOff,
+                                WriteOff.Price,
+                                WriteOff.Medicament.Information
+                            });
+
+            return GetInfo(writeOff);
         }
 
-        // GET: api/WriteOffs/5
-        [ResponseType(typeof(WriteOff))]
-        public async Task<IHttpActionResult> GetWriteOff(int id)
+        // GET: api/WriteOffs/id
+        public HttpResponseMessage GetWriteOff(int id)
         {
-            WriteOff writeOff = await db.WriteOffs.FindAsync(id);
-            if (writeOff == null)
-            {
-                return NotFound();
-            }
+            var writeOff = (from WriteOff in db.WriteOffs
+                            select new
+                            {
+                                WriteOff.IdMedicament,
+                                WriteOff.IdWriteOff,
+                                WriteOff.Medicament.Name,
+                                WriteOff.Amount,
+                                WriteOff.Medicament.DataProduction,
+                                WriteOff.DataWriteOff,
+                                WriteOff.Price,
+                                WriteOff.Medicament.Information
+                            }).Where(w => w.IdWriteOff == id);
 
-            return Ok(writeOff);
+            return GetInfo(writeOff);
         }
 
-        // PUT: api/WriteOffs/5
-        [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutWriteOff(int id, WriteOff writeOff)
+        // PUT: api/WriteOffs/id
+        public bool PutWriteOff(int id, WriteOff writeOff)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             if (id != writeOff.IdWriteOff)
-            {
-                return BadRequest();
-            }
+                return false;
 
             db.Entry(writeOff).State = EntityState.Modified;
 
             try
             {
-                await db.SaveChangesAsync();
+                db.SaveChanges();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!WriteOffExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return false;
             }
 
-            return StatusCode(HttpStatusCode.NoContent);
+            return true;
         }
 
         // POST: api/WriteOffs
-        [ResponseType(typeof(WriteOff))]
-        public async Task<IHttpActionResult> PostWriteOff(WriteOff writeOff)
+        public bool PostWriteOff(WriteOff writeOff)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
+                writeOff.IdWriteOff = 0;
+                db.WriteOffs.Add(writeOff);
+                db.SaveChanges();
+            }
+            catch
+            {
+                return false;
             }
 
-            db.WriteOffs.Add(writeOff);
-            await db.SaveChangesAsync();
-
-            return CreatedAtRoute("DefaultApi", new { id = writeOff.IdWriteOff }, writeOff);
+            return true;
         }
 
-        // DELETE: api/WriteOffs/5
-        [ResponseType(typeof(WriteOff))]
-        public async Task<IHttpActionResult> DeleteWriteOff(int id)
+        // POST: api/WriteOffs/?value={value}
+        public HttpResponseMessage SearchWriteOffs(string value)
         {
-            WriteOff writeOff = await db.WriteOffs.FindAsync(id);
+            string res = value.Trim();
+
+            var result = (from WriteOff in db.WriteOffs
+                          where ((WriteOff.Amount.ToString().Trim().Contains(res)) || (WriteOff.Medicament.Name.Contains(res))
+                                  || (WriteOff.IdWriteOff.ToString().Trim().Contains(res)) || (WriteOff.Price.ToString().Trim().Contains(res))
+                                  || (WriteOff.Medicament.Information.Contains(res)) || (WriteOff.Medicament.DataProduction.ToString().Trim().Contains(res))
+                                  || (WriteOff.DataWriteOff.ToString().Trim().Contains(res)))
+                          select new
+                          {
+                              WriteOff.IdMedicament,
+                              WriteOff.IdWriteOff,
+                              WriteOff.Medicament.Name,
+                              WriteOff.Amount,
+                              WriteOff.Medicament.DataProduction,
+                              WriteOff.DataWriteOff,
+                              WriteOff.Price,
+                              WriteOff.Medicament.Information
+                          });
+
+            return GetInfo(result);
+        }
+
+        // DELETE: api/WriteOffs/id
+        public bool DeleteWriteOff(int id)
+        {
+            WriteOff writeOff = db.WriteOffs.Find(id);
+
             if (writeOff == null)
-            {
-                return NotFound();
-            }
+                return false;
 
             db.WriteOffs.Remove(writeOff);
-            await db.SaveChangesAsync();
+            db.SaveChanges();
 
-            return Ok(writeOff);
+            return true;
         }
-
-        protected override void Dispose(bool disposing)
+        
+        private HttpResponseMessage GetInfo(IQueryable i)
         {
-            if (disposing)
+            try
             {
-                db.Dispose();
+                if (db.Indicators.Count() != 0)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, i);
+                }
+                else
+                {
+                    return Request.CreateResponse(HttpStatusCode.NoContent, "Indicators list is empty");
+                }
             }
-            base.Dispose(disposing);
-        }
-
-        private bool WriteOffExists(int id)
-        {
-            return db.WriteOffs.Count(e => e.IdWriteOff == id) > 0;
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
+            }
         }
     }
 }

@@ -18,102 +18,136 @@ namespace MedicalFridgeServer.Controllers
         private MedicalFridgeDBEntities2 db = new MedicalFridgeDBEntities2();
 
         // GET: api/Medicaments
-        public IQueryable<Medicament> GetMedicaments()
+        public HttpResponseMessage GetMedicaments()
         {
-            return db.Medicaments;
+            var medicaments = (from Medicament in db.Medicaments
+                               select new
+                               {
+                                   Medicament.IdMedicament,
+                                   Medicament.IdFridge,
+                                   Medicament.Name,
+                                   Medicament.Amount,
+                                   Medicament.DataProduction,
+                                   Medicament.ExpirationDate,
+                                   Medicament.Price,
+                                   Medicament.Information
+                               });
+
+            return GetInfo(medicaments);
+        }
+        
+        // GET: api/Medicaments/id
+        public HttpResponseMessage GetMedicament(int id)
+        {
+            var medicament = (from Medicament in db.Medicaments
+                               select new
+                               {
+                                   Medicament.IdMedicament,
+                                   Medicament.IdFridge,
+                                   Medicament.Name,
+                                   Medicament.Amount,
+                                   Medicament.DataProduction,
+                                   Medicament.ExpirationDate,
+                                   Medicament.Price,
+                                   Medicament.Information
+                               }).Where(m => m.IdFridge == id);
+
+            return GetInfo(medicament);
         }
 
-        // GET: api/Medicaments/5
-        [ResponseType(typeof(Medicament))]
-        public async Task<IHttpActionResult> GetMedicament(int id)
+        // PUT: api/Medicaments/id
+        public bool PutMedicament(int id, Medicament medicament)
         {
-            Medicament medicament = await db.Medicaments.FindAsync(id);
-            if (medicament == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(medicament);
-        }
-
-        // PUT: api/Medicaments/5
-        [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutMedicament(int id, Medicament medicament)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             if (id != medicament.IdMedicament)
-            {
-                return BadRequest();
-            }
+                return false;
 
             db.Entry(medicament).State = EntityState.Modified;
 
             try
             {
-                await db.SaveChangesAsync();
+                db.SaveChanges();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!MedicamentExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return false;
             }
 
-            return StatusCode(HttpStatusCode.NoContent);
+            return true;
+        }
+
+        // POST: api/Medicaments/?value={value}
+        public HttpResponseMessage SearchMedicament(string value)
+        {
+            string res = value.Trim();
+
+            var result = (from Medicament in db.Medicaments
+                          where ((Medicament.Amount.ToString().Trim().Contains(res)) || (Medicament.Name.Contains(res))
+                                  || (Medicament.IdMedicament.ToString().Trim().Contains(res)) || (Medicament.Price.ToString().Trim().Contains(res))
+                                  || (Medicament.Information.Contains(res)) || (Medicament.DataProduction.ToString().Trim().Contains(res))
+                                  || (Medicament.ExpirationDate.ToString().Trim().Contains(res)))
+                          select new
+                          {
+                              Medicament.IdMedicament,
+                              Medicament.IdFridge,
+                              Medicament.Name,
+                              Medicament.Amount,
+                              Medicament.DataProduction,
+                              Medicament.ExpirationDate,
+                              Medicament.Price,
+                              Medicament.Information
+                          });
+
+            return GetInfo(result);
         }
 
         // POST: api/Medicaments
-        [ResponseType(typeof(Medicament))]
-        public async Task<IHttpActionResult> PostMedicament(Medicament medicament)
+        public bool PostMedicament(Medicament medicament)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
+                medicament.IdMedicament = 0;
+                db.Medicaments.Add(medicament);
+                db.SaveChanges();
+            }
+            catch
+            {
+                return false;
             }
 
-            db.Medicaments.Add(medicament);
-            await db.SaveChangesAsync();
-
-            return CreatedAtRoute("DefaultApi", new { id = medicament.IdMedicament }, medicament);
+            return true;
         }
 
-        // DELETE: api/Medicaments/5
-        [ResponseType(typeof(Medicament))]
-        public async Task<IHttpActionResult> DeleteMedicament(int id)
+        // DELETE: api/Medicaments/id
+        public bool DeleteMedicament(int id)
         {
-            Medicament medicament = await db.Medicaments.FindAsync(id);
+            Medicament medicament = db.Medicaments.Find(id);
+
             if (medicament == null)
-            {
-                return NotFound();
-            }
-
+                return false;
+            
             db.Medicaments.Remove(medicament);
-            await db.SaveChangesAsync();
+            db.SaveChanges();
 
-            return Ok(medicament);
+            return true;
         }
-
-        protected override void Dispose(bool disposing)
+        
+        private HttpResponseMessage GetInfo(IQueryable i)
         {
-            if (disposing)
+            try
             {
-                db.Dispose();
+                if (db.Indicators.Count() != 0)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, i);
+                }
+                else
+                {
+                    return Request.CreateResponse(HttpStatusCode.NoContent, "Indicators list is empty");
+                }
             }
-            base.Dispose(disposing);
-        }
-
-        private bool MedicamentExists(int id)
-        {
-            return db.Medicaments.Count(e => e.IdMedicament == id) > 0;
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
+            }
         }
     }
 }

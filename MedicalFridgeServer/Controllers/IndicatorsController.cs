@@ -1,16 +1,10 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Data;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
-using System.Data.Entity.SqlServer;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Http.Description;
 using MedicalFridgeServer.Models;
 
 namespace MedicalFridgeServer.Controllers
@@ -23,14 +17,14 @@ namespace MedicalFridgeServer.Controllers
         public HttpResponseMessage GetIndicators()
         {
             var indicators = (from Indicator in db.Indicators
-                          select new
-                          {
-                              Indicator.IdIndicators,
-                              Indicator.IdFridge,
-                              Indicator.Temperature,
-                              Indicator.Humidity,
-                              Indicator.DataTime
-                          });
+                              select new
+                              {
+                                  Indicator.IdIndicators,
+                                  Indicator.IdFridge,
+                                  Indicator.Temperature,
+                                  Indicator.Humidity,
+                                  Indicator.DataTime
+                              });
 
             return GetInfo(indicators);
         }
@@ -39,18 +33,18 @@ namespace MedicalFridgeServer.Controllers
         public HttpResponseMessage GetIndicator(int id)
         {
             var indicator = (from Indicator in db.Indicators
-                              select new
-                              {
-                                  Indicator.IdIndicators,
-                                  Indicator.IdFridge,
-                                  Indicator.Temperature,
-                                  Indicator.Humidity,
-                                  Indicator.DataTime
-                              }).Where(i => i.IdFridge == id);
+                             select new
+                             {
+                                 Indicator.IdIndicators,
+                                 Indicator.IdFridge,
+                                 Indicator.Temperature,
+                                 Indicator.Humidity,
+                                 Indicator.DataTime
+                             }).Where(i => i.IdFridge == id);
 
             return GetInfo(indicator);
         }
-
+        
         // GET: api/Indicators/?value={IdFridge}
         public IEnumerable GetLastIndicator(int value)
         {
@@ -63,7 +57,8 @@ namespace MedicalFridgeServer.Controllers
                                  Indicator.Humidity
                              }).Where(i => (i.IdFridge == value)).ToList();
 
-            yield return indicator[indicator.Count - 1];
+            if(indicator.Count() != 0)
+                yield return indicator[indicator.Count - 1];
         }
 
         // GET: api/Indicators/{IdFridge}/{Days}
