@@ -98,7 +98,7 @@ namespace MedicalFridgeServer.Controllers
                           });
 
             return GetInfo(result);
-        }0
+        }
 
         // POST: api/Medicaments
         public bool PostMedicament(Medicament medicament)
