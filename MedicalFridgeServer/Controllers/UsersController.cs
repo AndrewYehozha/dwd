@@ -5,10 +5,12 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Web.Http.Cors;
 using MedicalFridgeServer.Models;
 
 namespace MedicalFridgeServer.Controllers
 {
+    [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class UsersController : System.Web.Http.ApiController
     {
         private MedicalFridgeDBEntities2 db = new MedicalFridgeDBEntities2();
