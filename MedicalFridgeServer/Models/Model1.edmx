@@ -63,6 +63,7 @@
           </Key>
           <Property Name="IdWriteOff" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="IdMedicament" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nchar" MaxLength="20" Nullable="false" />
           <Property Name="DataWriteOff" Type="datetime" Nullable="false" />
           <Property Name="Amount" Type="int" Nullable="false" />
           <Property Name="Price" Type="decimal" Precision="18" Scale="2" Nullable="false" />
@@ -227,6 +228,7 @@
           </Key>
           <Property Name="IdWriteOff" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="IdMedicament" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="20" FixedLength="true" Unicode="true" Nullable="false" />
           <Property Name="DataWriteOff" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Amount" Type="Int32" Nullable="false" />
           <Property Name="Price" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
@@ -292,7 +294,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="MedicalFridgeDBEntities2" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="MedicalFridgeDBEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Fridges" EntityType="Self.Fridge" />
           <EntitySet Name="Indicators" EntityType="Self.Indicator" />
           <EntitySet Name="Medicaments" EntityType="Self.Medicament" />
@@ -325,7 +327,7 @@
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="Хранилище MedicalFridgeDBModelContainer" CdmEntityContainer="MedicalFridgeDBEntities2">
+        <EntityContainerMapping StorageEntityContainer="Хранилище MedicalFridgeDBModelContainer" CdmEntityContainer="MedicalFridgeDBEntities">
           <EntitySetMapping Name="Fridges">
             <EntityTypeMapping TypeName="MedicalFridgeDBModel.Fridge">
               <MappingFragment StoreEntitySet="Fridges">
@@ -388,6 +390,7 @@
               <MappingFragment StoreEntitySet="WriteOff">
                 <ScalarProperty Name="IdWriteOff" ColumnName="IdWriteOff" />
                 <ScalarProperty Name="IdMedicament" ColumnName="IdMedicament" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="DataWriteOff" ColumnName="DataWriteOff" />
                 <ScalarProperty Name="Amount" ColumnName="Amount" />
                 <ScalarProperty Name="Price" ColumnName="Price" />

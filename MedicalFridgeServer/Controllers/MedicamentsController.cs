@@ -17,7 +17,7 @@ namespace MedicalFridgeServer.Controllers
     [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class MedicamentsController : ApiController
     {
-        private MedicalFridgeDBEntities2 db = new MedicalFridgeDBEntities2();
+        private MedicalFridgeDBEntities db = new MedicalFridgeDBEntities();
 
         // GET: api/Medicaments
         public HttpResponseMessage GetMedicaments()
@@ -37,22 +37,22 @@ namespace MedicalFridgeServer.Controllers
 
             return GetInfo(medicaments);
         }
-        
+
         // GET: api/Medicaments/id
         public HttpResponseMessage GetMedicament(int id)
         {
             var medicament = (from Medicament in db.Medicaments
-                               select new
-                               {
-                                   Medicament.IdMedicament,
-                                   Medicament.IdFridge,
-                                   Medicament.Name,
-                                   Medicament.Amount,
-                                   Medicament.DataProduction,
-                                   Medicament.ExpirationDate,
-                                   Medicament.Price,
-                                   Medicament.Information
-                               }).Where(m => m.IdFridge == id);
+                              select new
+                              {
+                                  Medicament.IdMedicament,
+                                  Medicament.IdFridge,
+                                  Medicament.Name,
+                                  Medicament.Amount,
+                                  Medicament.DataProduction,
+                                  Medicament.ExpirationDate,
+                                  Medicament.Price,
+                                  Medicament.Information
+                              }).Where(m => m.IdFridge == id);
 
             return GetInfo(medicament);
         }
@@ -126,13 +126,13 @@ namespace MedicalFridgeServer.Controllers
 
             if (medicament == null)
                 return false;
-            
+
             db.Medicaments.Remove(medicament);
             db.SaveChanges();
 
             return true;
         }
-        
+
         private HttpResponseMessage GetInfo(IQueryable i)
         {
             try

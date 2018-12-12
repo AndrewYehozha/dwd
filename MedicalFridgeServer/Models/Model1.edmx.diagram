@@ -4,13 +4,13 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="78e738550087435db1ccdcaf08adf815" Name="Diagram1">
+      <Diagram DiagramId="ce0aa01d396a435faabf70f0c8c9d525" Name="Diagram1">
         <EntityTypeShape EntityType="MedicalFridgeDBModel.Fridge" Width="1.5" PointX="3" PointY="5" IsExpanded="true" />
         <EntityTypeShape EntityType="MedicalFridgeDBModel.Indicator" Width="1.5" PointX="5.25" PointY="3.25" IsExpanded="true" />
         <EntityTypeShape EntityType="MedicalFridgeDBModel.Medicament" Width="1.5" PointX="5.25" PointY="6.25" IsExpanded="true" />
         <EntityTypeShape EntityType="MedicalFridgeDBModel.SizeFridge" Width="1.5" PointX="0.75" PointY="5.375" IsExpanded="true" />
         <EntityTypeShape EntityType="MedicalFridgeDBModel.User" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="MedicalFridgeDBModel.WriteOff" Width="1.5" PointX="7.5" PointY="6.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="MedicalFridgeDBModel.WriteOff" Width="1.5" PointX="7.5" PointY="6.5" IsExpanded="true" />
         <AssociationConnector Association="MedicalFridgeDBModel.FK_Fridges_SizeFridge" ManuallyRouted="false" />
         <AssociationConnector Association="MedicalFridgeDBModel.FK_Fridges_Users" ManuallyRouted="false" />
         <AssociationConnector Association="MedicalFridgeDBModel.FK_Indicators_Fridges" ManuallyRouted="false" />

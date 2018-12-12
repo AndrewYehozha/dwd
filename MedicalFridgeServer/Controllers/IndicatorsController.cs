@@ -13,7 +13,7 @@ namespace MedicalFridgeServer.Controllers
     [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class IndicatorsController : ApiController
     {
-        private MedicalFridgeDBEntities2 db = new MedicalFridgeDBEntities2();
+        private MedicalFridgeDBEntities db = new MedicalFridgeDBEntities();
 
         // GET: api/Indicators
         public HttpResponseMessage GetIndicators()
@@ -46,7 +46,7 @@ namespace MedicalFridgeServer.Controllers
 
             return GetInfo(indicator);
         }
-        
+
         // GET: api/Indicators/?value={IdFridge}
         public IEnumerable GetLastIndicator(int value)
         {
@@ -59,7 +59,7 @@ namespace MedicalFridgeServer.Controllers
                                  Indicator.Humidity
                              }).Where(i => (i.IdFridge == value)).ToList();
 
-            if(indicator.Count() != 0)
+            if (indicator.Count() != 0)
                 yield return indicator[indicator.Count - 1];
         }
 
@@ -77,7 +77,7 @@ namespace MedicalFridgeServer.Controllers
                                  Indicator.Humidity,
                                  Indicator.DataTime
                              }).Where(i => (i.IdFridge == value1) && (i.DataTime > d));
-            
+
             return GetInfo(indicator);
         }
 

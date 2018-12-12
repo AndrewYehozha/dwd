@@ -13,10 +13,10 @@ namespace MedicalFridgeServer.Models
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class MedicalFridgeDBEntities2 : DbContext
+    public partial class MedicalFridgeDBEntities : DbContext
     {
-        public MedicalFridgeDBEntities2()
-            : base("name=MedicalFridgeDBEntities2")
+        public MedicalFridgeDBEntities()
+            : base("name=MedicalFridgeDBEntities")
         {
         }
     

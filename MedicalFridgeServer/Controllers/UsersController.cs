@@ -13,7 +13,7 @@ namespace MedicalFridgeServer.Controllers
     [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class UsersController : System.Web.Http.ApiController
     {
-        private MedicalFridgeDBEntities2 db = new MedicalFridgeDBEntities2();
+        private MedicalFridgeDBEntities db = new MedicalFridgeDBEntities();
 
         // GET: api/Users
         public HttpResponseMessage GetUsers()

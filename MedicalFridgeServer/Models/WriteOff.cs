@@ -16,6 +16,7 @@ namespace MedicalFridgeServer.Models
     {
         public int IdWriteOff { get; set; }
         public int IdMedicament { get; set; }
+        public string Name { get; set; }
         public System.DateTime DataWriteOff { get; set; }
         public int Amount { get; set; }
         public decimal Price { get; set; }

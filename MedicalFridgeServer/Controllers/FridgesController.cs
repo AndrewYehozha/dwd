@@ -14,7 +14,7 @@ namespace MedicalFridgeServer.Controllers
     [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class FridgesController : ApiController
     {
-        private MedicalFridgeDBEntities2 db = new MedicalFridgeDBEntities2();
+        private MedicalFridgeDBEntities db = new MedicalFridgeDBEntities();
 
         // GET: api/Fridges
         public HttpResponseMessage GetFridges()

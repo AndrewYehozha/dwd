@@ -17,7 +17,7 @@ namespace MedicalFridgeServer.Controllers
     [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class WriteOffsController : ApiController
     {
-        private MedicalFridgeDBEntities2 db = new MedicalFridgeDBEntities2();
+        private MedicalFridgeDBEntities db = new MedicalFridgeDBEntities();
 
         // GET: api/WriteOffs
         public HttpResponseMessage GetWriteOffs()
@@ -46,13 +46,14 @@ namespace MedicalFridgeServer.Controllers
                             {
                                 WriteOff.IdMedicament,
                                 WriteOff.IdWriteOff,
+                                WriteOff.Medicament.Fridge.IdFridge,
                                 WriteOff.Medicament.Name,
                                 WriteOff.Amount,
                                 WriteOff.Medicament.DataProduction,
                                 WriteOff.DataWriteOff,
                                 WriteOff.Price,
                                 WriteOff.Medicament.Information
-                            }).Where(w => w.IdWriteOff == id);
+                            }).Where(w => w.IdFridge == id);
 
             return GetInfo(writeOff);
         }
@@ -132,7 +133,7 @@ namespace MedicalFridgeServer.Controllers
 
             return true;
         }
-        
+
         private HttpResponseMessage GetInfo(IQueryable i)
         {
             try
