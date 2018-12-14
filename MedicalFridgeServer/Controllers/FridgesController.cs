@@ -19,6 +19,7 @@ namespace MedicalFridgeServer.Controllers
         private MedicalFridgeDBEntities db = new MedicalFridgeDBEntities();
 
         // GET: api/Fridges
+        [HttpGet]
         public IEnumerable<Fridge_f> GetFridges()
         {
             var fridge = (from Fridge in db.Fridges
@@ -41,6 +42,7 @@ namespace MedicalFridgeServer.Controllers
         }
 
         // GET: api/Fridges/id
+        [HttpGet]
         public IEnumerable<Fridge_f> GetFridge(int id)
         {
             var fridge = (from Fridge in db.Fridges
@@ -63,6 +65,7 @@ namespace MedicalFridgeServer.Controllers
         }
 
         // PUT: api/Fridges/id
+        [HttpPut]
         public bool PutFridge(int id, Fridge fridge)
         {
             if (id != fridge.IdFridge)
@@ -83,6 +86,7 @@ namespace MedicalFridgeServer.Controllers
         }
 
         // POST: api/Fridges
+        [HttpPost]
         public bool PostFridge(Fridge fridge)
         {
             try
@@ -100,6 +104,7 @@ namespace MedicalFridgeServer.Controllers
         }
 
         // DELETE: api/Fridges/id
+        [HttpDelete]
         public bool DeleteFridge(int id)
         {
             Fridge fridge = db.Fridges.Find(id);

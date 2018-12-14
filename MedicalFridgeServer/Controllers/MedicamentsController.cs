@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Cors;
-using System.Web.Http.Description;
 using MedicalFridgeServer.Classes;
 using MedicalFridgeServer.Models;
 
@@ -21,6 +16,7 @@ namespace MedicalFridgeServer.Controllers
         private MedicalFridgeDBEntities db = new MedicalFridgeDBEntities();
 
         // GET: api/Medicaments
+        [HttpGet]
         public IEnumerable<Medicament_m> GetMedicaments()
         {
             var medicaments = (from Medicament in db.Medicaments
@@ -53,8 +49,9 @@ namespace MedicalFridgeServer.Controllers
 
             return result;
         }
-
+        
         // GET: api/Medicaments/id
+        [HttpGet]
         public IEnumerable<Medicament_m> GetMedicament(int id)
         {
             var medicament = (from Medicament in db.Medicaments
@@ -88,36 +85,14 @@ namespace MedicalFridgeServer.Controllers
             return result;
         }
 
-        // PUT: api/Medicaments/id
-        public bool PutMedicament(int id, Medicament medicament)
-        {
-            if (id != medicament.IdMedicament)
-                return false;
-
-            db.Entry(medicament).State = EntityState.Modified;
-
-            try
-            {
-                db.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        // POST: api/Medicaments/?value={value}
-        public IEnumerable<Medicament_m> SearchMedicament(string value)
+        // GET: api/Medicaments/IdFridge/?value=value
+        [HttpGet]
+        public IEnumerable<Medicament_m> SearchMedicament(int id, string value)
         {
             string res = value.Trim();
 
             var search = (from Medicament in db.Medicaments
-                          where ((Medicament.Amount.ToString().Trim().Contains(res)) || (Medicament.Name.Contains(res))
-                                  || (Medicament.IdMedicament.ToString().Trim().Contains(res)) || (Medicament.Price.ToString().Trim().Contains(res))
-                                  || (Medicament.Information.Contains(res)) || (Medicament.DataProduction.ToString().Trim().Contains(res))
-                                  || (Medicament.ExpirationDate.ToString().Trim().Contains(res)))
+                          where ((Medicament.IdFridge == id) && (Medicament.Name.Contains(res)))
                           select new
                           {
                               Medicament.IdMedicament,
@@ -139,7 +114,8 @@ namespace MedicalFridgeServer.Controllers
                     IdFridge = c.IdFridge,
                     Name = c.Name.Trim(),
                     Amount = c.Amount,
-                    DataProduction = c.DataProduction.Date,
+                    DataProduction = c.DataProduction.Date
+,
                     ExpirationDate = c.ExpirationDate.Date,
                     Price = c.Price,
                     Information = c.Information.Trim()
@@ -148,7 +124,29 @@ namespace MedicalFridgeServer.Controllers
             return result;
         }
 
+        // PUT: api/Medicaments/id
+        [HttpPut]
+        public bool PutMedicament(int id, Medicament medicament)
+        {
+            if (id != medicament.IdMedicament)
+                return false;
+
+            db.Entry(medicament).State = EntityState.Modified;
+
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return false;
+            }
+
+            return true;
+        }
+        
         // POST: api/Medicaments
+        [HttpPost]
         public bool PostMedicament(Medicament medicament)
         {
             try
@@ -166,6 +164,7 @@ namespace MedicalFridgeServer.Controllers
         }
 
         // DELETE: api/Medicaments/id
+        [HttpDelete]
         public bool DeleteMedicament(int id)
         {
             Medicament medicament = db.Medicaments.Find(id);

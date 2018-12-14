@@ -6,6 +6,7 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Web.Http;
 using System.Web.Http.Cors;
 using MedicalFridgeServer.Classes;
 using MedicalFridgeServer.Models;
@@ -18,6 +19,7 @@ namespace MedicalFridgeServer.Controllers
         private MedicalFridgeDBEntities db = new MedicalFridgeDBEntities();
 
         // GET: api/Users
+        [HttpGet]
         public IEnumerable<User_u> GetUsers()
         {
             var users = (from User in db.Users
@@ -54,6 +56,7 @@ namespace MedicalFridgeServer.Controllers
         }
 
         // GET: api/Users/id
+        [HttpGet]
         public IEnumerable<User_u> GetUser(int id)
         {
             var user = (from User in db.Users
@@ -90,6 +93,7 @@ namespace MedicalFridgeServer.Controllers
         }
 
         // GET: api/Users/value1/value2
+        [HttpGet]
         public IEnumerable<User_u> GetUserPass(string value1, string value2)
         {
             var user = (from User in db.Users
@@ -126,6 +130,7 @@ namespace MedicalFridgeServer.Controllers
         }
 
         // PUT: api/Users/id
+        [HttpPut]
         public bool PutUser(int id, User user)
         {
             if (id != user.IdUser)
@@ -146,6 +151,7 @@ namespace MedicalFridgeServer.Controllers
         }
 
         // POST: api/Users
+        [HttpPost]
         public bool PostUser(User user)
         {
             var c = (from User in db.Users
@@ -164,6 +170,7 @@ namespace MedicalFridgeServer.Controllers
         }
 
         // DELETE: api/Users/id
+        [HttpDelete]
         public bool DeleteUser(int id)
         {
             User user = db.Users.Find(id);

@@ -17,6 +17,7 @@ namespace MedicalFridgeServer.Controllers
         private MedicalFridgeDBEntities db = new MedicalFridgeDBEntities();
 
         // GET: api/Indicators
+        [HttpGet]
         public IEnumerable<Indicators_i> GetIndicators()
         {
             var indicators = (from Indicator in db.Indicators
@@ -45,6 +46,7 @@ namespace MedicalFridgeServer.Controllers
         }
 
         // GET: api/Indicators/{IdFridge}
+        [HttpGet]
         public IEnumerable<Indicators_i> GetIndicator(int id)
         {
             var indicator = (from Indicator in db.Indicators
@@ -73,6 +75,7 @@ namespace MedicalFridgeServer.Controllers
         }
 
         // GET: api/Indicators/?value={IdFridge}
+        [HttpGet]
         public IEnumerable<Indicators_i> GetLastIndicator(int value)
         {
             var indicator = (from Indicator in db.Indicators
@@ -101,6 +104,7 @@ namespace MedicalFridgeServer.Controllers
         }
 
         // GET: api/Indicators/{IdFridge}/{Days}
+        [HttpGet]
         public IEnumerable<Indicators_i> GetIndicatorOfTime(int value1, int value2)
         {
             DateTime d = DateTime.Now.AddDays(-value2);
@@ -131,6 +135,7 @@ namespace MedicalFridgeServer.Controllers
         }
 
         // POST: api/Indicators
+        [HttpPost]
         public bool PostIndicator(Indicator indicator)
         {
             try

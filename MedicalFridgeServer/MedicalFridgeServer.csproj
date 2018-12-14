@@ -372,6 +372,7 @@
     <Compile Include="Classes\Indicators_i.cs" />
     <Compile Include="Controllers\MedicamentsController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
+    <Compile Include="Controllers\WriteOffsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
