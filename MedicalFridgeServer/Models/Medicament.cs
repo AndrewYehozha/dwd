@@ -14,12 +14,6 @@ namespace MedicalFridgeServer.Models
     
     public partial class Medicament
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Medicament()
-        {
-            this.WriteOffs = new HashSet<WriteOff>();
-        }
-    
         public int IdMedicament { get; set; }
         public int IdFridge { get; set; }
         public string Name { get; set; }
@@ -30,7 +24,5 @@ namespace MedicalFridgeServer.Models
         public string Information { get; set; }
     
         public virtual Fridge Fridge { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<WriteOff> WriteOffs { get; set; }
     }
 }

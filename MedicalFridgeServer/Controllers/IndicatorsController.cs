@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using MedicalFridgeServer.Models;
+using MedicalFridgeServer.Classes;
 
 namespace MedicalFridgeServer.Controllers
 {
@@ -16,7 +17,7 @@ namespace MedicalFridgeServer.Controllers
         private MedicalFridgeDBEntities db = new MedicalFridgeDBEntities();
 
         // GET: api/Indicators
-        public HttpResponseMessage GetIndicators()
+        public IEnumerable<Indicators_i> GetIndicators()
         {
             var indicators = (from Indicator in db.Indicators
                               select new
@@ -28,11 +29,23 @@ namespace MedicalFridgeServer.Controllers
                                   Indicator.DataTime
                               });
 
-            return GetInfo(indicators);
+            List<Indicators_i> result = new List<Indicators_i>() { };
+
+            foreach (var c in indicators)
+                result.Add(new Indicators_i
+                {
+                    IdIndicators = c.IdIndicators,
+                    IdFridge = c.IdFridge,
+                    Temperature = c.Temperature,
+                    Humidity = c.Humidity,
+                    DataTime = c.DataTime.Date
+                });
+
+            return result;
         }
 
         // GET: api/Indicators/{IdFridge}
-        public HttpResponseMessage GetIndicator(int id)
+        public IEnumerable<Indicators_i> GetIndicator(int id)
         {
             var indicator = (from Indicator in db.Indicators
                              select new
@@ -44,11 +57,23 @@ namespace MedicalFridgeServer.Controllers
                                  Indicator.DataTime
                              }).Where(i => i.IdFridge == id);
 
-            return GetInfo(indicator);
+            List<Indicators_i> result = new List<Indicators_i>() { };
+
+            foreach (var c in indicator)
+                result.Add(new Indicators_i
+                {
+                    IdIndicators = c.IdIndicators,
+                    IdFridge = c.IdFridge,
+                    Temperature = c.Temperature,
+                    Humidity = c.Humidity,
+                    DataTime = c.DataTime.Date
+                });
+
+            return result;
         }
 
         // GET: api/Indicators/?value={IdFridge}
-        public IEnumerable GetLastIndicator(int value)
+        public IEnumerable<Indicators_i> GetLastIndicator(int value)
         {
             var indicator = (from Indicator in db.Indicators
                              select new
@@ -56,15 +81,27 @@ namespace MedicalFridgeServer.Controllers
                                  Indicator.IdIndicators,
                                  Indicator.IdFridge,
                                  Indicator.Temperature,
-                                 Indicator.Humidity
+                                 Indicator.Humidity,
+                                 Indicator.DataTime
                              }).Where(i => (i.IdFridge == value)).ToList();
 
-            if (indicator.Count() != 0)
-                yield return indicator[indicator.Count - 1];
+            List<Indicators_i> result = new List<Indicators_i>() { };
+
+            foreach (var c in indicator)
+                result.Add(new Indicators_i
+                {
+                    IdIndicators = c.IdIndicators,
+                    IdFridge = c.IdFridge,
+                    Temperature = c.Temperature,
+                    Humidity = c.Humidity,
+                    DataTime = c.DataTime.Date
+                });
+
+            yield return result[result.Count - 1];
         }
 
         // GET: api/Indicators/{IdFridge}/{Days}
-        public HttpResponseMessage GetIndicatorOfTime(int value1, int value2)
+        public IEnumerable<Indicators_i> GetIndicatorOfTime(int value1, int value2)
         {
             DateTime d = DateTime.Now.AddDays(-value2);
 
@@ -78,33 +115,35 @@ namespace MedicalFridgeServer.Controllers
                                  Indicator.DataTime
                              }).Where(i => (i.IdFridge == value1) && (i.DataTime > d));
 
-            return GetInfo(indicator);
+            List<Indicators_i> result = new List<Indicators_i>() { };
+
+            foreach (var c in indicator)
+                result.Add(new Indicators_i
+                {
+                    IdIndicators = c.IdIndicators,
+                    IdFridge = c.IdFridge,
+                    Temperature = c.Temperature,
+                    Humidity = c.Humidity,
+                    DataTime = c.DataTime.Date
+                });
+
+            return result;
         }
 
         // POST: api/Indicators
-        public async void PostIndicator(Indicator indicator)
-        {
-            db.Indicators.Add(indicator);
-            await db.SaveChangesAsync();
-        }
-
-        private HttpResponseMessage GetInfo(IQueryable i)
+        public bool PostIndicator(Indicator indicator)
         {
             try
             {
-                if (db.Indicators.Count() != 0)
-                {
-                    return Request.CreateResponse(HttpStatusCode.OK, i);
-                }
-                else
-                {
-                    return Request.CreateResponse(HttpStatusCode.NoContent, "Indicators list is empty");
-                }
+                db.Indicators.Add(indicator);
+                db.SaveChangesAsync();
             }
-            catch (Exception ex)
+            catch
             {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
+                return false;
             }
+
+            return true;
         }
     }
 }

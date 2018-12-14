@@ -28,8 +28,6 @@ namespace MedicalFridgeServer.Models
         public virtual DbSet<Fridge> Fridges { get; set; }
         public virtual DbSet<Indicator> Indicators { get; set; }
         public virtual DbSet<Medicament> Medicaments { get; set; }
-        public virtual DbSet<SizeFridge> SizeFridges { get; set; }
         public virtual DbSet<User> Users { get; set; }
-        public virtual DbSet<WriteOff> WriteOffs { get; set; }
     }
 }

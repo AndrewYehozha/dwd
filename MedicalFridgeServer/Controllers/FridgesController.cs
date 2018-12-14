@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
@@ -7,6 +8,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Cors;
+using MedicalFridgeServer.Classes;
 using MedicalFridgeServer.Models;
 
 namespace MedicalFridgeServer.Controllers
@@ -17,31 +19,47 @@ namespace MedicalFridgeServer.Controllers
         private MedicalFridgeDBEntities db = new MedicalFridgeDBEntities();
 
         // GET: api/Fridges
-        public HttpResponseMessage GetFridges()
+        public IEnumerable<Fridge_f> GetFridges()
         {
             var fridge = (from Fridge in db.Fridges
                           select new
                           {
                               Fridge.IdFridge,
-                              Fridge.IdUser,
-                              Fridge.SizeFridge.Size
+                              Fridge.IdUser
                           });
 
-            return GetInfo(fridge);
+            List<Fridge_f> result = new List<Fridge_f>() { };
+
+            foreach (var c in fridge)
+                result.Add(new Fridge_f
+                {
+                    IdFridge = c.IdFridge,
+                    IdUser = c.IdUser
+                });
+
+            return result;
         }
 
         // GET: api/Fridges/id
-        public HttpResponseMessage GetFridge(int id)
+        public IEnumerable<Fridge_f> GetFridge(int id)
         {
             var fridge = (from Fridge in db.Fridges
                           select new
                           {
                               Fridge.IdFridge,
-                              Fridge.IdUser,
-                              Fridge.SizeFridge.Size
+                              Fridge.IdUser
                           }).Where(f => f.IdUser == id);
 
-            return GetInfo(fridge);
+            List<Fridge_f> result = new List<Fridge_f>() { };
+
+            foreach (var c in fridge)
+                result.Add(new Fridge_f
+                {
+                    IdFridge = c.IdFridge,
+                    IdUser = c.IdUser
+                });
+
+            return result;
         }
 
         // PUT: api/Fridges/id
@@ -93,25 +111,6 @@ namespace MedicalFridgeServer.Controllers
             db.SaveChanges();
 
             return true;
-        }
-
-        private HttpResponseMessage GetInfo(IQueryable f)
-        {
-            try
-            {
-                if (db.Fridges.Count() != 0)
-                {
-                    return Request.CreateResponse(HttpStatusCode.OK, f);
-                }
-                else
-                {
-                    return Request.CreateResponse(HttpStatusCode.NoContent, "Fridges list is empty");
-                }
-            }
-            catch (Exception ex)
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
-            }
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
@@ -6,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http.Cors;
+using MedicalFridgeServer.Classes;
 using MedicalFridgeServer.Models;
 
 namespace MedicalFridgeServer.Controllers
@@ -16,7 +18,7 @@ namespace MedicalFridgeServer.Controllers
         private MedicalFridgeDBEntities db = new MedicalFridgeDBEntities();
 
         // GET: api/Users
-        public HttpResponseMessage GetUsers()
+        public IEnumerable<User_u> GetUsers()
         {
             var users = (from User in db.Users
                          select new
@@ -32,11 +34,27 @@ namespace MedicalFridgeServer.Controllers
                              User.Address
                          });
 
-            return GetInfo(users);
+            List<User_u> result = new List<User_u>() { };
+
+            foreach (var c in users)
+                result.Add(new User_u
+                {
+                    IdUser = c.IdUser,
+                    Login = c.Login.Trim(),
+                    Password = c.Password.Trim(),
+                    Role = c.Role.Trim(),
+                    NameOrganization = c.NameOrganization.Trim(),
+                    Phone = c.Phone.Trim(),
+                    Country = c.Country.Trim(),
+                    City = c.City.Trim(),
+                    Address = c.Address.Trim()
+                });
+
+            return result;
         }
 
         // GET: api/Users/id
-        public HttpResponseMessage GetUser(int id)
+        public IEnumerable<User_u> GetUser(int id)
         {
             var user = (from User in db.Users
                         select new
@@ -52,11 +70,27 @@ namespace MedicalFridgeServer.Controllers
                             User.Address
                         }).Where(u => u.IdUser == id);
 
-            return GetInfo(user);
+            List<User_u> result = new List<User_u>() { };
+
+            foreach (var c in user)
+                result.Add(new User_u
+                {
+                    IdUser = c.IdUser,
+                    Login = c.Login.Trim(),
+                    Password = c.Password.Trim(),
+                    Role = c.Role.Trim(),
+                    NameOrganization = c.NameOrganization.Trim(),
+                    Phone = c.Phone.Trim(),
+                    Country = c.Country.Trim(),
+                    City = c.City.Trim(),
+                    Address = c.Address.Trim()
+                });
+
+            return result;
         }
 
         // GET: api/Users/value1/value2
-        public HttpResponseMessage GetUserPass(string value1, string value2)
+        public IEnumerable<User_u> GetUserPass(string value1, string value2)
         {
             var user = (from User in db.Users
                         select new
@@ -72,7 +106,23 @@ namespace MedicalFridgeServer.Controllers
                             User.Address
                         }).Where(i => (i.Login.Trim() == value1.Trim()) && (i.Password.Trim() == value2.Trim()));
 
-            return GetInfo(user);
+            List<User_u> result = new List<User_u>() { };
+
+            foreach (var c in user)
+                result.Add(new User_u
+                {
+                    IdUser = c.IdUser,
+                    Login = c.Login.Trim(),
+                    Password = c.Password.Trim(),
+                    Role = c.Role.Trim(),
+                    NameOrganization = c.NameOrganization.Trim(),
+                    Phone = c.Phone.Trim(),
+                    Country = c.Country.Trim(),
+                    City = c.City.Trim(),
+                    Address = c.Address.Trim()
+                });
+
+            return result;
         }
 
         // PUT: api/Users/id
@@ -125,25 +175,6 @@ namespace MedicalFridgeServer.Controllers
             db.SaveChanges();
 
             return true;
-        }
-
-        private HttpResponseMessage GetInfo(IQueryable u)
-        {
-            try
-            {
-                if (db.Users.Count() != 0)
-                {
-                    return Request.CreateResponse(HttpStatusCode.OK, u);
-                }
-                else
-                {
-                    return Request.CreateResponse(HttpStatusCode.NoContent, "User list is empty");
-                }
-            }
-            catch (Exception ex)
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
-            }
         }
     }
 }

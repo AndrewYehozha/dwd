@@ -364,11 +364,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Classes\Fridge_f.cs" />
+    <Compile Include="Classes\Medicament_m.cs" />
+    <Compile Include="Classes\User_u.cs" />
     <Compile Include="Controllers\FridgesController.cs" />
     <Compile Include="Controllers\IndicatorsController.cs" />
+    <Compile Include="Classes\Indicators_i.cs" />
     <Compile Include="Controllers\MedicamentsController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
-    <Compile Include="Controllers\WriteOffsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -396,13 +399,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Model1.edmx</DependentUpon>
     </Compile>
-    <Compile Include="Models\SizeFridge.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\User.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\WriteOff.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />

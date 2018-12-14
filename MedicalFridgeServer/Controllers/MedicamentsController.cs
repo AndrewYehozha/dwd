@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using System.Web.Http.Description;
+using MedicalFridgeServer.Classes;
 using MedicalFridgeServer.Models;
 
 namespace MedicalFridgeServer.Controllers
@@ -20,7 +21,7 @@ namespace MedicalFridgeServer.Controllers
         private MedicalFridgeDBEntities db = new MedicalFridgeDBEntities();
 
         // GET: api/Medicaments
-        public HttpResponseMessage GetMedicaments()
+        public IEnumerable<Medicament_m> GetMedicaments()
         {
             var medicaments = (from Medicament in db.Medicaments
                                select new
@@ -35,11 +36,26 @@ namespace MedicalFridgeServer.Controllers
                                    Medicament.Information
                                });
 
-            return GetInfo(medicaments);
+            List<Medicament_m> result = new List<Medicament_m>() { };
+
+            foreach (var c in medicaments)
+                result.Add(new Medicament_m
+                {
+                    IdMedicament = c.IdMedicament,
+                    IdFridge = c.IdFridge,
+                    Name = c.Name.Trim(),
+                    Amount = c.Amount,
+                    DataProduction = c.DataProduction.Date,
+                    ExpirationDate = c.ExpirationDate.Date,
+                    Price = c.Price,
+                    Information = c.Information.Trim()
+                });
+
+            return result;
         }
 
         // GET: api/Medicaments/id
-        public HttpResponseMessage GetMedicament(int id)
+        public IEnumerable<Medicament_m> GetMedicament(int id)
         {
             var medicament = (from Medicament in db.Medicaments
                               select new
@@ -54,7 +70,22 @@ namespace MedicalFridgeServer.Controllers
                                   Medicament.Information
                               }).Where(m => m.IdFridge == id);
 
-            return GetInfo(medicament);
+            List<Medicament_m> result = new List<Medicament_m>() { };
+
+            foreach (var c in medicament)
+                result.Add(new Medicament_m
+                {
+                    IdMedicament = c.IdMedicament,
+                    IdFridge = c.IdFridge,
+                    Name = c.Name.Trim(),
+                    Amount = c.Amount,
+                    DataProduction = c.DataProduction.Date,
+                    ExpirationDate = c.ExpirationDate.Date,
+                    Price = c.Price,
+                    Information = c.Information.Trim()
+                });
+
+            return result;
         }
 
         // PUT: api/Medicaments/id
@@ -78,11 +109,11 @@ namespace MedicalFridgeServer.Controllers
         }
 
         // POST: api/Medicaments/?value={value}
-        public HttpResponseMessage SearchMedicament(string value)
+        public IEnumerable<Medicament_m> SearchMedicament(string value)
         {
             string res = value.Trim();
 
-            var result = (from Medicament in db.Medicaments
+            var search = (from Medicament in db.Medicaments
                           where ((Medicament.Amount.ToString().Trim().Contains(res)) || (Medicament.Name.Contains(res))
                                   || (Medicament.IdMedicament.ToString().Trim().Contains(res)) || (Medicament.Price.ToString().Trim().Contains(res))
                                   || (Medicament.Information.Contains(res)) || (Medicament.DataProduction.ToString().Trim().Contains(res))
@@ -99,7 +130,22 @@ namespace MedicalFridgeServer.Controllers
                               Medicament.Information
                           });
 
-            return GetInfo(result);
+            List<Medicament_m> result = new List<Medicament_m>() { };
+
+            foreach (var c in search)
+                result.Add(new Medicament_m
+                {
+                    IdMedicament = c.IdMedicament,
+                    IdFridge = c.IdFridge,
+                    Name = c.Name.Trim(),
+                    Amount = c.Amount,
+                    DataProduction = c.DataProduction.Date,
+                    ExpirationDate = c.ExpirationDate.Date,
+                    Price = c.Price,
+                    Information = c.Information.Trim()
+                });
+
+            return result;
         }
 
         // POST: api/Medicaments
@@ -131,25 +177,6 @@ namespace MedicalFridgeServer.Controllers
             db.SaveChanges();
 
             return true;
-        }
-
-        private HttpResponseMessage GetInfo(IQueryable i)
-        {
-            try
-            {
-                if (db.Indicators.Count() != 0)
-                {
-                    return Request.CreateResponse(HttpStatusCode.OK, i);
-                }
-                else
-                {
-                    return Request.CreateResponse(HttpStatusCode.NoContent, "Indicators list is empty");
-                }
-            }
-            catch (Exception ex)
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
-            }
         }
     }
 }

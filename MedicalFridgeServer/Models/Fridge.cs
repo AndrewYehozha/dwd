@@ -23,9 +23,8 @@ namespace MedicalFridgeServer.Models
     
         public int IdFridge { get; set; }
         public int IdUser { get; set; }
-        public Nullable<int> IdSizeFridge { get; set; }
+        public Nullable<int> SizeFridge { get; set; }
     
-        public virtual SizeFridge SizeFridge { get; set; }
         public virtual User User { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Indicator> Indicators { get; set; }
