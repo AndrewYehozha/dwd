@@ -136,7 +136,14 @@ namespace MedicalFridgeServer.Controllers
             if (id != user.IdUser)
                 return false;
 
-            db.Entry(user).State = EntityState.Modified;
+            var c = (from User in db.Users
+                     select new { User.Login,User.IdUser }
+                     ).Where(i => (i.Login.Trim() == user.Login.Trim()));
+
+            if (c.Count() <= 1)
+                db.Entry(user).State = EntityState.Modified;
+            else
+                return false;
 
             try
             {

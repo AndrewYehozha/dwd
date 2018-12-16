@@ -416,7 +416,7 @@
     <None Include="packages.config" />
     <None Include="Properties\PublishProfiles\MedicalFridgeServer - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\MedicalFridgeServer - Web Deploy1.pubxml" />
-    <None Include="Properties\PublishProfiles\MedicalFridgeServer - Web Deploy2.pubxml" />
+    <None Include="Properties\PublishProfiles\MedicalFridgeServer - Web Deploy3.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

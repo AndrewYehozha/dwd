@@ -22,6 +22,8 @@ namespace MedicalFridgeServer.Models
         public System.DateTime ExpirationDate { get; set; }
         public decimal Price { get; set; }
         public string Information { get; set; }
+        public Nullable<decimal> MinTemperature { get; set; }
+        public Nullable<decimal> MaxTemperature { get; set; }
     
         public virtual Fridge Fridge { get; set; }
     }

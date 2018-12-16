@@ -29,6 +29,8 @@ namespace MedicalFridgeServer.Controllers
                                    Medicament.DataProduction,
                                    Medicament.ExpirationDate,
                                    Medicament.Price,
+                                   Medicament.MinTemperature,
+                                   Medicament.MaxTemperature,
                                    Medicament.Information
                                });
 
@@ -64,6 +66,8 @@ namespace MedicalFridgeServer.Controllers
                                   Medicament.DataProduction,
                                   Medicament.ExpirationDate,
                                   Medicament.Price,
+                                  Medicament.MinTemperature,
+                                  Medicament.MaxTemperature,
                                   Medicament.Information
                               }).Where(m => m.IdFridge == id);
 
@@ -102,6 +106,8 @@ namespace MedicalFridgeServer.Controllers
                               Medicament.DataProduction,
                               Medicament.ExpirationDate,
                               Medicament.Price,
+                              Medicament.MinTemperature,
+                              Medicament.MaxTemperature,
                               Medicament.Information
                           });
 

@@ -14,6 +14,8 @@ namespace MedicalFridgeServer.Classes
         public System.DateTime DataProduction { get; set; }
         public System.DateTime ExpirationDate { get; set; }
         public decimal Price { get; set; }
+        public Nullable<decimal> MinTemperature { get; set; }
+        public Nullable<decimal> MaxTemperature { get; set; }
         public string Information { get; set; }
     }
 }
