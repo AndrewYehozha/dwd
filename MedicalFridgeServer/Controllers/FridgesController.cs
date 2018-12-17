@@ -26,7 +26,8 @@ namespace MedicalFridgeServer.Controllers
                           select new
                           {
                               Fridge.IdFridge,
-                              Fridge.IdUser
+                              Fridge.IdUser,
+                              Fridge.Indicators
                           });
 
             List<Fridge_f> result = new List<Fridge_f>() { };
@@ -35,7 +36,9 @@ namespace MedicalFridgeServer.Controllers
                 result.Add(new Fridge_f
                 {
                     IdFridge = c.IdFridge,
-                    IdUser = c.IdUser
+                    IdUser = c.IdUser,
+                    LastTemperature = c.Indicators.Last().Temperature,
+                    LastHumidity = c.Indicators.Last().Humidity
                 });
 
             return result;
@@ -49,7 +52,8 @@ namespace MedicalFridgeServer.Controllers
                           select new
                           {
                               Fridge.IdFridge,
-                              Fridge.IdUser
+                              Fridge.IdUser,
+                              Fridge.Indicators
                           }).Where(f => f.IdUser == id);
 
             List<Fridge_f> result = new List<Fridge_f>() { };
@@ -58,7 +62,9 @@ namespace MedicalFridgeServer.Controllers
                 result.Add(new Fridge_f
                 {
                     IdFridge = c.IdFridge,
-                    IdUser = c.IdUser
+                    IdUser = c.IdUser,
+                    LastTemperature = c.Indicators.Last().Temperature,
+                    LastHumidity = c.Indicators.Last().Humidity
                 });
 
             return result;
