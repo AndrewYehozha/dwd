@@ -13,7 +13,7 @@ namespace MedicalFridgeServer.Controllers
     [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class MedicamentsController : ApiController
     {
-        private MedicalFridgeDBEntities db = new MedicalFridgeDBEntities();
+        private MedicalFridgeDBEntities2 db = new MedicalFridgeDBEntities2();
 
         // GET: api/Medicaments
         [HttpGet]
@@ -31,7 +31,7 @@ namespace MedicalFridgeServer.Controllers
                                    Medicament.Price,
                                    Medicament.MinTemperature,
                                    Medicament.MaxTemperature,
-                                   Medicament.Information
+                                   Medicament.Status
                                });
 
             List<Medicament_m> result = new List<Medicament_m>() { };
@@ -46,12 +46,14 @@ namespace MedicalFridgeServer.Controllers
                     DataProduction = c.DataProduction.Date,
                     ExpirationDate = c.ExpirationDate.Date,
                     Price = c.Price,
-                    Information = c.Information.Trim()
+                    MinTemperature = c.MinTemperature,
+                    MaxTemperature = c.MaxTemperature,
+                    Status = (bool)(c.Status)
                 });
 
             return result;
         }
-        
+
         // GET: api/Medicaments/id
         [HttpGet]
         public IEnumerable<Medicament_m> GetMedicament(int id)
@@ -68,7 +70,7 @@ namespace MedicalFridgeServer.Controllers
                                   Medicament.Price,
                                   Medicament.MinTemperature,
                                   Medicament.MaxTemperature,
-                                  Medicament.Information
+                                  Medicament.Status
                               }).Where(m => m.IdFridge == id);
 
             List<Medicament_m> result = new List<Medicament_m>() { };
@@ -83,7 +85,48 @@ namespace MedicalFridgeServer.Controllers
                     DataProduction = c.DataProduction.Date,
                     ExpirationDate = c.ExpirationDate.Date,
                     Price = c.Price,
-                    Information = c.Information.Trim()
+                    MinTemperature = c.MinTemperature,
+                    MaxTemperature = c.MaxTemperature,
+                    Status = c.Status
+                });
+
+            return result;
+        }
+
+        // GET: api/Medicaments/?value=value
+        [HttpGet]
+        public IEnumerable<Medicament_m> GetMedicamentById(int value)
+        {
+            var medicament = (from Medicament in db.Medicaments
+                              select new
+                              {
+                                  Medicament.IdMedicament,
+                                  Medicament.IdFridge,
+                                  Medicament.Name,
+                                  Medicament.Amount,
+                                  Medicament.DataProduction,
+                                  Medicament.ExpirationDate,
+                                  Medicament.Price,
+                                  Medicament.MinTemperature,
+                                  Medicament.MaxTemperature,
+                                  Medicament.Status
+                              }).Where(m => m.IdMedicament == value);
+
+            List<Medicament_m> result = new List<Medicament_m>() { };
+
+            foreach (var c in medicament)
+                result.Add(new Medicament_m
+                {
+                    IdMedicament = c.IdMedicament,
+                    IdFridge = c.IdFridge,
+                    Name = c.Name.Trim(),
+                    Amount = c.Amount,
+                    DataProduction = c.DataProduction.Date,
+                    ExpirationDate = c.ExpirationDate.Date,
+                    Price = c.Price,
+                    MinTemperature = c.MinTemperature,
+                    MaxTemperature = c.MaxTemperature,
+                    Status = c.Status
                 });
 
             return result;
@@ -108,7 +151,7 @@ namespace MedicalFridgeServer.Controllers
                               Medicament.Price,
                               Medicament.MinTemperature,
                               Medicament.MaxTemperature,
-                              Medicament.Information
+                              Medicament.Status
                           });
 
             List<Medicament_m> result = new List<Medicament_m>() { };
@@ -120,11 +163,12 @@ namespace MedicalFridgeServer.Controllers
                     IdFridge = c.IdFridge,
                     Name = c.Name.Trim(),
                     Amount = c.Amount,
-                    DataProduction = c.DataProduction.Date
-,
+                    DataProduction = c.DataProduction.Date,
                     ExpirationDate = c.ExpirationDate.Date,
                     Price = c.Price,
-                    Information = c.Information.Trim()
+                    MinTemperature = c.MinTemperature,
+                    MaxTemperature = c.MaxTemperature,
+                    Status = c.Status
                 });
 
             return result;
@@ -132,7 +176,7 @@ namespace MedicalFridgeServer.Controllers
 
         // PUT: api/Medicaments/id
         [HttpPut]
-        public bool PutMedicament(int id, Medicament medicament)
+        public bool PutMedicament(int id, Medicaments medicament)
         {
             if (id != medicament.IdMedicament)
                 return false;
@@ -150,10 +194,10 @@ namespace MedicalFridgeServer.Controllers
 
             return true;
         }
-        
+
         // POST: api/Medicaments
         [HttpPost]
-        public bool PostMedicament(Medicament medicament)
+        public bool PostMedicament(Medicaments medicament)
         {
             try
             {
@@ -173,7 +217,7 @@ namespace MedicalFridgeServer.Controllers
         [HttpDelete]
         public bool DeleteMedicament(int id)
         {
-            Medicament medicament = db.Medicaments.Find(id);
+            Medicaments medicament = db.Medicaments.Find(id);
 
             if (medicament == null)
                 return false;

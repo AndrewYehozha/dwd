@@ -11,6 +11,6 @@ namespace MedicalFridgeServer.Controllers
         public int IdFridge { get; set; }
         public Nullable<decimal> Temperature { get; set; }
         public Nullable<decimal> Humidity { get; set; }
-        public System.DateTime DataTime { get; set; }
+        public DateTime DataTime { get; set; }
     }
 }

@@ -10,11 +10,11 @@ namespace MedicalFridgeServer.Controllers
 {
     public class WriteOffsController : ApiController
     {
-        private MedicalFridgeDBEntities db = new MedicalFridgeDBEntities();
+        private MedicalFridgeDBEntities2 db = new MedicalFridgeDBEntities2();
 
         // GET: api/WriteOffs
         [HttpGet]
-        public IEnumerable<Medicament_m> GetMedicaments()
+        public IEnumerable<WriteOff> GetMedicaments()
         {
             var medicaments = (from Medicament in db.Medicaments
                                select new
@@ -26,15 +26,15 @@ namespace MedicalFridgeServer.Controllers
                                    Medicament.DataProduction,
                                    Medicament.ExpirationDate,
                                    Medicament.Price,
-                                   Medicament.Information
+                                   Medicament.Status
                                });
 
-            List<Medicament_m> result = new List<Medicament_m>() { };
+            List<WriteOff> result = new List<WriteOff>() { };
 
             foreach (var c in medicaments)
             {
                 if (c.ExpirationDate.Date <= DateTime.Now.Date)
-                    result.Add(new Medicament_m
+                    result.Add(new WriteOff
                     {
                         IdMedicament = c.IdMedicament,
                         IdFridge = c.IdFridge,
@@ -43,7 +43,7 @@ namespace MedicalFridgeServer.Controllers
                         DataProduction = c.DataProduction.Date,
                         ExpirationDate = c.ExpirationDate.Date,
                         Price = c.Price,
-                        Information = c.Information.Trim()
+                        Status = (bool)(c.Status)
                     });
             }
 
@@ -52,7 +52,7 @@ namespace MedicalFridgeServer.Controllers
 
         // GET: api/WriteOffs/5
         [HttpGet]
-        public IEnumerable<Medicament_m> GetMedicament(int id)
+        public IEnumerable<WriteOff> GetMedicament(int id)
         {
             var medicament = (from Medicament in db.Medicaments
                               select new
@@ -64,14 +64,14 @@ namespace MedicalFridgeServer.Controllers
                                   Medicament.DataProduction,
                                   Medicament.ExpirationDate,
                                   Medicament.Price,
-                                  Medicament.Information
+                                  Medicament.Status
                               }).Where(m => (m.IdFridge == id));
 
-            List<Medicament_m> result = new List<Medicament_m>() { };
+            List<WriteOff> result = new List<WriteOff>() { };
 
             foreach (var c in medicament)
                 if (c.ExpirationDate.Date <= DateTime.Now.Date)
-                    result.Add(new Medicament_m
+                    result.Add(new WriteOff
                     {
                         IdMedicament = c.IdMedicament,
                         IdFridge = c.IdFridge,
@@ -80,7 +80,7 @@ namespace MedicalFridgeServer.Controllers
                         DataProduction = c.DataProduction.Date,
                         ExpirationDate = c.ExpirationDate.Date,
                         Price = c.Price,
-                        Information = c.Information.Trim()
+                        Status = (bool)(c.Status)
                     });
 
             return result;
@@ -88,7 +88,7 @@ namespace MedicalFridgeServer.Controllers
 
         // GET: api/WriteOffs/IdFridge/?value=value
         [HttpGet]
-        public IEnumerable<Medicament_m> SearchWriteOffsMedicament(int id, string value)
+        public IEnumerable<WriteOff> SearchWriteOffsMedicament(int id, string value)
         {
             string res = value.Trim();
 
@@ -103,14 +103,14 @@ namespace MedicalFridgeServer.Controllers
                               Medicament.DataProduction,
                               Medicament.ExpirationDate,
                               Medicament.Price,
-                              Medicament.Information
+                              Medicament.Status
                           });
 
-            List<Medicament_m> result = new List<Medicament_m>() { };
+            List<WriteOff> result = new List<WriteOff>() { };
 
             foreach (var c in search)
                 if (c.ExpirationDate.Date <= DateTime.Now.Date)
-                    result.Add(new Medicament_m
+                    result.Add(new WriteOff
                     {
                         IdMedicament = c.IdMedicament,
                         IdFridge = c.IdFridge,
@@ -119,7 +119,7 @@ namespace MedicalFridgeServer.Controllers
                         DataProduction = c.DataProduction.Date,
                         ExpirationDate = c.ExpirationDate.Date,
                         Price = c.Price,
-                        Information = c.Information.Trim()
+                        Status = (bool)(c.Status)
                     });
 
             return result;

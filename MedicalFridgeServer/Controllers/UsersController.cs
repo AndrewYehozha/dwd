@@ -16,7 +16,7 @@ namespace MedicalFridgeServer.Controllers
     [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class UsersController : System.Web.Http.ApiController
     {
-        private MedicalFridgeDBEntities db = new MedicalFridgeDBEntities();
+        private MedicalFridgeDBEntities2 db = new MedicalFridgeDBEntities2();
 
         // GET: api/Users
         [HttpGet]
@@ -131,13 +131,13 @@ namespace MedicalFridgeServer.Controllers
 
         // PUT: api/Users/id
         [HttpPut]
-        public bool PutUser(int id, User user)
+        public bool PutUser(int id, Users user)
         {
             if (id != user.IdUser)
                 return false;
 
             var c = (from User in db.Users
-                     select new { User.Login,User.IdUser }
+                     select new { User.Login, User.IdUser }
                      ).Where(i => (i.IdUser != id) && (i.Login.Trim() == user.Login.Trim()));
 
             if (c.Count() == 0)
@@ -159,7 +159,7 @@ namespace MedicalFridgeServer.Controllers
 
         // POST: api/Users
         [HttpPost]
-        public bool PostUser(User user)
+        public bool PostUser(Users user)
         {
             var c = (from User in db.Users
                      select new { User.Login }
@@ -180,7 +180,7 @@ namespace MedicalFridgeServer.Controllers
         [HttpDelete]
         public bool DeleteUser(int id)
         {
-            User user = db.Users.Find(id);
+            Users user = db.Users.Find(id);
 
             if (user == null)
                 return false;

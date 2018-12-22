@@ -12,7 +12,7 @@ namespace MedicalFridgeServer.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Medicament
+    public partial class Medicaments
     {
         public int IdMedicament { get; set; }
         public int IdFridge { get; set; }
@@ -21,10 +21,11 @@ namespace MedicalFridgeServer.Models
         public System.DateTime DataProduction { get; set; }
         public System.DateTime ExpirationDate { get; set; }
         public decimal Price { get; set; }
-        public string Information { get; set; }
         public Nullable<decimal> MinTemperature { get; set; }
         public Nullable<decimal> MaxTemperature { get; set; }
+        public bool Status { get; set; }
+        public System.DateTime DataAddInFridge { get; set; }
     
-        public virtual Fridge Fridge { get; set; }
+        public virtual Fridges Fridges { get; set; }
     }
 }

@@ -5,7 +5,7 @@ using System.Web;
 
 namespace MedicalFridgeServer.Classes
 {
-    public class Medicament_m
+    public class WriteOff
     {
         public int IdMedicament { get; set; }
         public int IdFridge { get; set; }
@@ -14,8 +14,6 @@ namespace MedicalFridgeServer.Classes
         public DateTime DataProduction { get; set; }
         public System.DateTime ExpirationDate { get; set; }
         public decimal Price { get; set; }
-        public Nullable<decimal> MinTemperature { get; set; }
-        public Nullable<decimal> MaxTemperature { get; set; }
         public bool Status { get; set; }
         public System.DateTime DataAddInFridge { get; set; }
     }

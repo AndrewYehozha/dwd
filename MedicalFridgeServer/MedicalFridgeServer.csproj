@@ -367,6 +367,7 @@
     <Compile Include="Classes\Fridge_f.cs" />
     <Compile Include="Classes\Medicament_m.cs" />
     <Compile Include="Classes\User_u.cs" />
+    <Compile Include="Classes\WriteOff.cs" />
     <Compile Include="Controllers\FridgesController.cs" />
     <Compile Include="Controllers\IndicatorsController.cs" />
     <Compile Include="Classes\Indicators_i.cs" />
@@ -376,13 +377,13 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\Fridge.cs">
+    <Compile Include="Models\Fridges.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Indicator.cs">
+    <Compile Include="Models\Indicators.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Medicament.cs">
+    <Compile Include="Models\Medicaments.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Model1.Context.cs">
@@ -400,7 +401,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Model1.edmx</DependentUpon>
     </Compile>
-    <Compile Include="Models\User.cs">
+    <Compile Include="Models\Users.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -12,12 +12,12 @@ namespace MedicalFridgeServer.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class User
+    public partial class Users
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public User()
+        public Users()
         {
-            this.Fridges = new HashSet<Fridge>();
+            this.Fridges = new HashSet<Fridges>();
         }
     
         public int IdUser { get; set; }
@@ -31,6 +31,6 @@ namespace MedicalFridgeServer.Models
         public string Phone { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Fridge> Fridges { get; set; }
+        public virtual ICollection<Fridges> Fridges { get; set; }
     }
 }

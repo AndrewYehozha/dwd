@@ -14,7 +14,7 @@ namespace MedicalFridgeServer.Controllers
     [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class IndicatorsController : ApiController
     {
-        private MedicalFridgeDBEntities db = new MedicalFridgeDBEntities();
+        private MedicalFridgeDBEntities2 db = new MedicalFridgeDBEntities2();
 
         // GET: api/Indicators
         [HttpGet]
@@ -33,15 +33,16 @@ namespace MedicalFridgeServer.Controllers
             List<Indicators_i> result = new List<Indicators_i>() { };
 
             foreach (var c in indicators)
+            {
                 result.Add(new Indicators_i
                 {
                     IdIndicators = c.IdIndicators,
                     IdFridge = c.IdFridge,
                     Temperature = c.Temperature,
                     Humidity = c.Humidity,
-                    DataTime = c.DataTime.Date
+                    DataTime = DateTime.Parse(c.DataTime)
                 });
-
+            }
             return result;
         }
 
@@ -68,7 +69,7 @@ namespace MedicalFridgeServer.Controllers
                     IdFridge = c.IdFridge,
                     Temperature = c.Temperature,
                     Humidity = c.Humidity,
-                    DataTime = c.DataTime.Date
+                    DataTime = DateTime.Parse(c.DataTime)
                 });
 
             return result;
@@ -97,7 +98,7 @@ namespace MedicalFridgeServer.Controllers
                     IdFridge = c.IdFridge,
                     Temperature = c.Temperature,
                     Humidity = c.Humidity,
-                    DataTime = c.DataTime.Date
+                    DataTime = DateTime.Parse(c.DataTime)
                 });
 
             yield return result[result.Count - 1];
@@ -117,29 +118,30 @@ namespace MedicalFridgeServer.Controllers
                                  Indicator.Temperature,
                                  Indicator.Humidity,
                                  Indicator.DataTime
-                             }).Where(i => (i.IdFridge == value1) && (i.DataTime > d));
+                             }).Where(i => (i.IdFridge == value1));
 
             List<Indicators_i> result = new List<Indicators_i>() { };
-
             foreach (var c in indicator)
-                result.Add(new Indicators_i
-                {
-                    IdIndicators = c.IdIndicators,
-                    IdFridge = c.IdFridge,
-                    Temperature = c.Temperature,
-                    Humidity = c.Humidity,
-                    DataTime = c.DataTime.Date
-                });
+                if (DateTime.Parse(c.DataTime) > d)
+                    result.Add(new Indicators_i
+                    {
+                        IdIndicators = c.IdIndicators,
+                        IdFridge = c.IdFridge,
+                        Temperature = c.Temperature,
+                        Humidity = c.Humidity,
+                        DataTime = DateTime.Parse(c.DataTime)
+                    });
 
             return result;
         }
 
         // POST: api/Indicators
         [HttpPost]
-        public bool PostIndicator(Indicator indicator)
+        public bool PostIndicator(Indicators indicator)
         {
             try
             {
+                indicator.DataTime = DateTime.Now.ToString("yyyy.MM.ddTHH:mm:ss");
                 db.Indicators.Add(indicator);
                 db.SaveChangesAsync();
             }

@@ -12,14 +12,14 @@ namespace MedicalFridgeServer.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Indicator
+    public partial class Indicators
     {
         public int IdIndicators { get; set; }
         public int IdFridge { get; set; }
         public Nullable<decimal> Temperature { get; set; }
         public Nullable<decimal> Humidity { get; set; }
-        public System.DateTime DataTime { get; set; }
+        public string DataTime { get; set; }
     
-        public virtual Fridge Fridge { get; set; }
+        public virtual Fridges Fridges { get; set; }
     }
 }

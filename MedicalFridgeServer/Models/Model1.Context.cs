@@ -13,10 +13,10 @@ namespace MedicalFridgeServer.Models
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class MedicalFridgeDBEntities : DbContext
+    public partial class MedicalFridgeDBEntities2 : DbContext
     {
-        public MedicalFridgeDBEntities()
-            : base("name=MedicalFridgeDBEntities")
+        public MedicalFridgeDBEntities2()
+            : base("name=MedicalFridgeDBEntities2")
         {
         }
     
@@ -25,9 +25,9 @@ namespace MedicalFridgeServer.Models
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<Fridge> Fridges { get; set; }
-        public virtual DbSet<Indicator> Indicators { get; set; }
-        public virtual DbSet<Medicament> Medicaments { get; set; }
-        public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<Fridges> Fridges { get; set; }
+        public virtual DbSet<Indicators> Indicators { get; set; }
+        public virtual DbSet<Medicaments> Medicaments { get; set; }
+        public virtual DbSet<Users> Users { get; set; }
     }
 }

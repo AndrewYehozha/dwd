@@ -16,7 +16,7 @@ namespace MedicalFridgeServer.Controllers
     [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class FridgesController : ApiController
     {
-        private MedicalFridgeDBEntities db = new MedicalFridgeDBEntities();
+        private MedicalFridgeDBEntities2 db = new MedicalFridgeDBEntities2();
 
         // GET: api/Fridges
         [HttpGet]
@@ -33,13 +33,24 @@ namespace MedicalFridgeServer.Controllers
             List<Fridge_f> result = new List<Fridge_f>() { };
 
             foreach (var c in fridge)
+            {
+                decimal temperature = 0;
+                decimal humidity = 0;
+
+                if (c.Indicators.Count != 0)
+                {
+                    temperature = c.Indicators.Last().Temperature.Value;
+                    humidity = c.Indicators.Last().Humidity.Value;
+                }
+
                 result.Add(new Fridge_f
                 {
                     IdFridge = c.IdFridge,
                     IdUser = c.IdUser,
-                    LastTemperature = c.Indicators.Last().Temperature,
-                    LastHumidity = c.Indicators.Last().Humidity
+                    LastTemperature = temperature,
+                    LastHumidity = humidity
                 });
+            }
 
             return result;
         }
@@ -59,20 +70,31 @@ namespace MedicalFridgeServer.Controllers
             List<Fridge_f> result = new List<Fridge_f>() { };
 
             foreach (var c in fridge)
+            {
+                decimal temperature = 0;
+                decimal humidity = 0;
+
+                if (c.Indicators.Count != 0)
+                {
+                    temperature = c.Indicators.Last().Temperature.Value;
+                    humidity = c.Indicators.Last().Humidity.Value;
+                }
+
                 result.Add(new Fridge_f
                 {
                     IdFridge = c.IdFridge,
                     IdUser = c.IdUser,
-                    LastTemperature = c.Indicators.Last().Temperature,
-                    LastHumidity = c.Indicators.Last().Humidity
+                    LastTemperature = temperature,
+                    LastHumidity = humidity
                 });
+            }
 
             return result;
         }
 
         // PUT: api/Fridges/id
         [HttpPut]
-        public bool PutFridge(int id, Fridge fridge)
+        public bool PutFridge(int id, Fridges fridge)
         {
             if (id != fridge.IdFridge)
                 return false;
@@ -93,7 +115,7 @@ namespace MedicalFridgeServer.Controllers
 
         // POST: api/Fridges
         [HttpPost]
-        public bool PostFridge(Fridge fridge)
+        public bool PostFridge(Fridges fridge)
         {
             try
             {
@@ -113,7 +135,7 @@ namespace MedicalFridgeServer.Controllers
         [HttpDelete]
         public bool DeleteFridge(int id)
         {
-            Fridge fridge = db.Fridges.Find(id);
+            Fridges fridge = db.Fridges.Find(id);
 
             if (fridge == null)
                 return false;
