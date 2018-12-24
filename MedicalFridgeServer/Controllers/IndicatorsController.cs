@@ -226,52 +226,55 @@ namespace MedicalFridgeServer.Controllers
                         }
                     }
 
-                himid /= countHum;
-                temperat /= countTemp;
+                if (countHum != 0 && countTemp != 0)
+                {
+                    himid /= countHum;
+                    temperat /= countTemp;
 
-                List<Medicaments> resultMed = new List<Medicaments>() { };
+                    List<Medicaments> resultMed = new List<Medicaments>() { };
 
-                foreach (var c in medicament)
-                    if ((c.IdFridge == resultFridge[i].IdFridge) && (((c.MaxTemperature + 5) <= temperat) || ((c.MinTemperature - 5) >= temperat)))
-                    {
-                        resultMed.Add(new Medicaments
+                    foreach (var c in medicament)
+                        if ((c.IdFridge == resultFridge[i].IdFridge) && ((c.ExpirationDate.Date <= DateTime.Now.AddHours(2)) || ((c.MaxTemperature + 5) <= temperat) || ((c.MinTemperature - 5) >= temperat)))
                         {
-                            IdMedicament = c.IdMedicament,
-                            IdFridge = c.IdFridge,
-                            Name = c.Name.Trim(),
-                            Amount = c.Amount,
-                            DataProduction = c.DataProduction.Date,
-                            ExpirationDate = c.ExpirationDate.Date,
-                            Price = c.Price,
-                            MinTemperature = c.MinTemperature,
-                            MaxTemperature = c.MaxTemperature,
-                            DataAddInFridge = c.DataAddInFridge,
-                            Status = false
-                        });
-                    }
+                            resultMed.Add(new Medicaments
+                            {
+                                IdMedicament = c.IdMedicament,
+                                IdFridge = c.IdFridge,
+                                Name = c.Name.Trim(),
+                                Amount = c.Amount,
+                                DataProduction = c.DataProduction.Date,
+                                ExpirationDate = c.ExpirationDate.Date,
+                                Price = c.Price,
+                                MinTemperature = c.MinTemperature,
+                                MaxTemperature = c.MaxTemperature,
+                                DataAddInFridge = c.DataAddInFridge,
+                                Status = false
+                            });
+                        }
 
-                foreach (var medic in resultMed)
-                {
-                    db.Entry(medic).State = EntityState.Modified;
-
-                    try
+                    foreach (var medic in resultMed)
                     {
-                        db.SaveChanges();
+                        db.Entry(medic).State = EntityState.Modified;
+
+                        try
+                        {
+                            db.SaveChanges();
+                        }
+                        catch { }
                     }
-                    catch { }
-                }
 
-                if ((himid >= 85) && (temperat >= 15))
-                {
-                    resultFridge[i].Status = false;
-
-                    db.Entry(resultFridge[i]).State = EntityState.Modified;
-
-                    try
+                    if ((himid >= 85) && (temperat >= 15))
                     {
-                        db.SaveChanges();
+                        Fridges frid = new Fridges() {IdFridge = resultFridge[i].IdFridge, IdUser = resultFridge[i].IdUser, Status = false};
+                        
+                        db.Entry(frid).State = EntityState.Modified;
+
+                        try
+                        {
+                            db.SaveChanges();
+                        }
+                        catch { }
                     }
-                    catch { }
                 }
             }
         }
