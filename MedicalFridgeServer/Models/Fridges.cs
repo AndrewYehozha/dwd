@@ -23,6 +23,7 @@ namespace MedicalFridgeServer.Models
     
         public int IdFridge { get; set; }
         public int IdUser { get; set; }
+        public bool Status { get; set; }
     
         public virtual Users Users { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

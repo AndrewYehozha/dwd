@@ -27,6 +27,7 @@ namespace MedicalFridgeServer.Controllers
                           {
                               Fridge.IdFridge,
                               Fridge.IdUser,
+                              Fridge.Status,
                               Fridge.Indicators
                           });
 
@@ -47,6 +48,7 @@ namespace MedicalFridgeServer.Controllers
                 {
                     IdFridge = c.IdFridge,
                     IdUser = c.IdUser,
+                    Status = c.Status,
                     LastTemperature = temperature,
                     LastHumidity = humidity
                 });
@@ -64,6 +66,7 @@ namespace MedicalFridgeServer.Controllers
                           {
                               Fridge.IdFridge,
                               Fridge.IdUser,
+                              Fridge.Status,
                               Fridge.Indicators
                           }).Where(f => f.IdUser == id);
 
@@ -84,6 +87,7 @@ namespace MedicalFridgeServer.Controllers
                 {
                     IdFridge = c.IdFridge,
                     IdUser = c.IdUser,
+                    Status = c.Status,
                     LastTemperature = temperature,
                     LastHumidity = humidity
                 });
@@ -99,6 +103,7 @@ namespace MedicalFridgeServer.Controllers
             if (id != fridge.IdFridge)
                 return false;
 
+            fridge.Status = true;
             db.Entry(fridge).State = EntityState.Modified;
 
             try
@@ -120,6 +125,7 @@ namespace MedicalFridgeServer.Controllers
             try
             {
                 fridge.IdFridge = 0;
+                fridge.Status = true;
                 db.Fridges.Add(fridge);
                 db.SaveChanges();
             }

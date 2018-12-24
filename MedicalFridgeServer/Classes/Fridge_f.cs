@@ -10,6 +10,7 @@ namespace MedicalFridgeServer.Classes
     {
         public int IdFridge { get; set; }
         public int IdUser { get; set; }
+        public bool Status { get; set; }
         public Nullable<decimal> LastTemperature { get; set; }
         public Nullable<decimal> LastHumidity { get; set; }
     }

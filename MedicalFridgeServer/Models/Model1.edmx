@@ -10,6 +10,7 @@
             <PropertyRef Name="IdFridge" />
           </Key>
           <Property Name="IdFridge" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Status" Type="bit" Nullable="false" />
           <Property Name="IdUser" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Indicators">
@@ -125,6 +126,7 @@
           <NavigationProperty Name="Users" Relationship="Self.FK_Fridges_Users" FromRole="Fridges" ToRole="Users" />
           <NavigationProperty Name="Indicators" Relationship="Self.FK_Indicators_Fridges" FromRole="Fridges" ToRole="Indicators" />
           <NavigationProperty Name="Medicaments" Relationship="Self.FK_Medicaments_Fridges" FromRole="Fridges" ToRole="Medicaments" />
+          <Property Name="Status" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="Indicators">
           <Key>
@@ -238,6 +240,7 @@
           <EntitySetMapping Name="Fridges">
             <EntityTypeMapping TypeName="MedicalFridgeDBModel.Fridges">
               <MappingFragment StoreEntitySet="Fridges">
+                <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="IdFridge" ColumnName="IdFridge" />
                 <ScalarProperty Name="IdUser" ColumnName="IdUser" />
               </MappingFragment>

@@ -143,11 +143,11 @@ namespace MedicalFridgeServer.Controllers
         {
             try
             {
+                checkStatusMedicaments();
                 indicator.IdIndicators = 0;
                 indicator.DataTime = DateTime.Now.AddHours(2).ToString("yyyy.MM.ddTHH:mm:ss");
                 db.Indicators.Add(indicator);
                 db.SaveChangesAsync();
-                checkStatusMedicaments();
             }
             catch
             {
@@ -159,6 +159,27 @@ namespace MedicalFridgeServer.Controllers
 
         private void checkStatusMedicaments()
         {
+            var fridge = (from Fridge in db.Fridges
+                          select new
+                          {
+                              Fridge.IdFridge,
+                              Fridge.IdUser,
+                              Fridge.Status,
+                              Fridge.Indicators
+                          });
+
+            List<Fridge_f> resultFridge = new List<Fridge_f>() { };
+
+            foreach (var c in fridge)
+            {
+                resultFridge.Add(new Fridge_f
+                {
+                    IdFridge = c.IdFridge,
+                    IdUser = c.IdUser,
+                    Status = c.Status
+                });
+            }
+
             var medicament = (from Medicament in db.Medicaments
                               select new
                               {
@@ -173,69 +194,85 @@ namespace MedicalFridgeServer.Controllers
                                   Medicament.MaxTemperature,
                                   Medicament.DataAddInFridge,
                                   Medicament.Status
-                              }).Where(m => m.Status == true);
-            
-            List<Medicaments> resultMed = new List<Medicaments>() { };
-
-            foreach (var c in medicament)
-                resultMed.Add(new Medicaments
-                {
-                    IdMedicament = c.IdMedicament,
-                    IdFridge = c.IdFridge,
-                    Name = c.Name.Trim(),
-                    Amount = c.Amount,
-                    DataProduction = c.DataProduction.Date,
-                    ExpirationDate = c.ExpirationDate.Date,
-                    Price = c.Price,
-                    MinTemperature = c.MinTemperature,
-                    MaxTemperature = c.MaxTemperature,
-                    DataAddInFridge = c.DataAddInFridge,
-                    Status = c.Status
-                });
+                              }).Where(m => (m.Status == true));
 
 
-            var fridge = (from Fridge in db.Fridges
-                          select new
-                          {
-                              Fridge.IdFridge,
-                              Fridge.IdUser,
-                              Fridge.Indicators
-                          });
-
-            List<Fridge_f> resultFridge = new List<Fridge_f>() { };
-
-            foreach (var c in fridge)
+            decimal? himid = 0, temperat = 0;
+            for (int i = 0; i < resultFridge.Count(); i++)
             {
-                decimal temperature = 0;
-                decimal humidity = 0;
+                var indicator = (from Indicator in db.Indicators
+                                 select new
+                                 {
+                                     Indicator.IdIndicators,
+                                     Indicator.IdFridge,
+                                     Indicator.Temperature,
+                                     Indicator.Humidity,
+                                     Indicator.DataTime
+                                 });
 
-                if (c.Indicators.Count != 0)
+                int countHum = 0, countTemp = 0;
+                foreach (var c in indicator)
+                    if (c.IdFridge == resultFridge[i].IdFridge)
+                    {
+                        if (Convert.ToDateTime(c.DataTime) >= DateTime.Now.AddHours(-2))
+                        {
+                            himid += c.Humidity;
+                            countHum++;
+                        }
+                        if (Convert.ToDateTime(c.DataTime) >= DateTime.Now.AddHours(-6))
+                        {
+                            temperat += c.Temperature;
+                            countTemp++;
+                        }
+                    }
+
+                himid /= countHum;
+                temperat /= countTemp;
+
+                List<Medicaments> resultMed = new List<Medicaments>() { };
+
+                foreach (var c in medicament)
+                    if ((c.IdFridge == resultFridge[i].IdFridge) && (((c.MaxTemperature + 5) <= temperat) || ((c.MinTemperature - 5) >= temperat)))
+                    {
+                        resultMed.Add(new Medicaments
+                        {
+                            IdMedicament = c.IdMedicament,
+                            IdFridge = c.IdFridge,
+                            Name = c.Name.Trim(),
+                            Amount = c.Amount,
+                            DataProduction = c.DataProduction.Date,
+                            ExpirationDate = c.ExpirationDate.Date,
+                            Price = c.Price,
+                            MinTemperature = c.MinTemperature,
+                            MaxTemperature = c.MaxTemperature,
+                            DataAddInFridge = c.DataAddInFridge,
+                            Status = false
+                        });
+                    }
+
+                foreach (var medic in resultMed)
                 {
-                    temperature = c.Indicators.Last().Temperature.Value;
-                    humidity = c.Indicators.Last().Humidity.Value;
+                    db.Entry(medic).State = EntityState.Modified;
+
+                    try
+                    {
+                        db.SaveChanges();
+                    }
+                    catch { }
                 }
 
-                resultFridge.Add(new Fridge_f
+                if ((himid >= 85) && (temperat >= 15))
                 {
-                    IdFridge = c.IdFridge,
-                    IdUser = c.IdUser,
-                    LastTemperature = temperature,
-                    LastHumidity = humidity
-                });
-            }
+                    resultFridge[i].Status = false;
 
+                    db.Entry(resultFridge[i]).State = EntityState.Modified;
 
-
-
-
-            db.Entry(medicament).State = EntityState.Modified;
-
-            try
-            {
-                db.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
+                    try
+                    {
+                        db.SaveChanges();
+                    }
+                    catch { }
+                }
             }
         }
     }
