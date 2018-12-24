@@ -24,7 +24,7 @@ namespace MedicalFridgeServer.Models
         public Nullable<decimal> MinTemperature { get; set; }
         public Nullable<decimal> MaxTemperature { get; set; }
         public bool Status { get; set; }
-        public System.DateTime DataAddInFridge { get; set; }
+        public string DataAddInFridge { get; set; }
     
         public virtual Fridges Fridges { get; set; }
     }

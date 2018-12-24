@@ -36,7 +36,7 @@
           <Property Name="MinTemperature" Type="decimal" Precision="18" Scale="2" />
           <Property Name="MaxTemperature" Type="decimal" Precision="18" Scale="2" />
           <Property Name="Status" Type="bit" Nullable="false" />
-          <Property Name="DataAddInFridge" Type="date" Nullable="false" />
+          <Property Name="DataAddInFridge" Type="nchar" MaxLength="19" Nullable="false" />
         </EntityType>
         <EntityType Name="Users">
           <Key>
@@ -151,7 +151,7 @@
           <Property Name="MinTemperature" Type="Decimal" Precision="18" Scale="2" />
           <Property Name="MaxTemperature" Type="Decimal" Precision="18" Scale="2" />
           <Property Name="Status" Type="Boolean" Nullable="false" />
-          <Property Name="DataAddInFridge" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="DataAddInFridge" Type="String" Nullable="false" MaxLength="19" Unicode="true" FixedLength="true" />
           <NavigationProperty Name="Fridges" Relationship="Self.FK_Medicaments_Fridges" FromRole="Medicaments" ToRole="Fridges" />
         </EntityType>
         <EntityType Name="Users">

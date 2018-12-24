@@ -17,6 +17,5 @@ namespace MedicalFridgeServer.Classes
         public Nullable<decimal> MinTemperature { get; set; }
         public Nullable<decimal> MaxTemperature { get; set; }
         public bool Status { get; set; }
-        public System.DateTime DataAddInFridge { get; set; }
     }
 }

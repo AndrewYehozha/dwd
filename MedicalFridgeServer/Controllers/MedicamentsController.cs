@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
@@ -202,11 +203,13 @@ namespace MedicalFridgeServer.Controllers
             try
             {
                 medicament.IdMedicament = 0;
+                medicament.DataAddInFridge = DateTime.Now.AddHours(2).ToString("yyyy.MM.ddTHH:mm:ss");
                 db.Medicaments.Add(medicament);
                 db.SaveChanges();
             }
-            catch
+            catch (Exception ex)
             {
+                string g = ex.Message;
                 return false;
             }
 

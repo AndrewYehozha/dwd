@@ -15,6 +15,5 @@ namespace MedicalFridgeServer.Classes
         public System.DateTime ExpirationDate { get; set; }
         public decimal Price { get; set; }
         public bool Status { get; set; }
-        public System.DateTime DataAddInFridge { get; set; }
     }
 }
