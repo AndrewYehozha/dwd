@@ -168,6 +168,7 @@ namespace MedicalFridgeServer.Controllers
             if (c.Count() == 0)
             {
                 user.IdUser = 0;
+                user.Role = "User";
                 db.Users.Add(user);
                 db.SaveChanges();
             }
