@@ -263,18 +263,18 @@ namespace MedicalFridgeServer.Controllers
                         catch { }
                     }
 
-                    if ((himid >= 85) && (temperat >= 15))
-                    {
-                        Fridges frid = new Fridges() {IdFridge = resultFridge[i].IdFridge, IdUser = resultFridge[i].IdUser, Status = false};
-                        
-                        db.Entry(frid).State = EntityState.Modified;
+                    Fridges frid = new Fridges() { IdFridge = resultFridge[i].IdFridge, IdUser = resultFridge[i].IdUser, Status = true };
 
-                        try
-                        {
-                            db.SaveChanges();
-                        }
-                        catch { }
+                    if ((himid >= 85) && (temperat >= 15))
+                        frid.Status = false;
+
+                    db.Entry(frid).State = EntityState.Modified;
+
+                    try
+                    {
+                        db.SaveChanges();
                     }
+                    catch { }
                 }
             }
         }
