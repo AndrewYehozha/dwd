@@ -159,7 +159,7 @@ namespace MedicalFridgeServer.Controllers
 
         // POST: api/Users
         [HttpPost]
-        public bool PostUser(Users user)
+        public IEnumerable<User_u> PostUser(Users user)
         {
             var c = (from User in db.Users
                      select new { User.Login }
@@ -171,11 +171,11 @@ namespace MedicalFridgeServer.Controllers
                 user.Role = "User";
                 db.Users.Add(user);
                 db.SaveChanges();
-            }
-            else
-                return false;
 
-            return true;
+                return GetUserPass(user.Login, user.Password);
+            }
+
+            return null;
         }
 
         // DELETE: api/Users/id
