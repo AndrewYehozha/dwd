@@ -108,10 +108,8 @@ namespace MedicalFridgeServer.Controllers
 
         // GET: api/Indicators/{IdFridge}/{Days}
         [HttpGet]
-        public IEnumerable<Indicators_i> GetIndicatorOfTime(int value1, int value2)
+        public IEnumerable<Statistic> GetIndicatorOfTime(int value1, string value2)
         {
-            DateTime d = DateTime.Now.AddDays(-value2);
-
             var indicator = (from Indicator in db.Indicators
                              select new
                              {
@@ -122,17 +120,141 @@ namespace MedicalFridgeServer.Controllers
                                  Indicator.DataTime
                              }).Where(i => (i.IdFridge == value1));
 
-            List<Indicators_i> result = new List<Indicators_i>() { };
+            List<Indicators_i> ind = new List<Indicators_i>() { };
+
             foreach (var c in indicator)
-                if (DateTime.Parse(c.DataTime) > d)
-                    result.Add(new Indicators_i
+            {
+                ind.Add(new Indicators_i
+                {
+                    IdFridge = c.IdFridge,
+                    DataTime = Convert.ToDateTime(c.DataTime),
+                    Humidity = c.Humidity,
+                    Temperature = c.Temperature
+                });
+            }
+
+            decimal?[,] result = new decimal?[2,0];
+
+            if (value2 == "Day")
+                result = getIndicatorForDay(ind);
+            if (value2 == "Week")
+                result = getIndicatorForWeekAndMonth(ind, "Week", new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day - 6));
+            if (value2 == "Month")
+                result = getIndicatorForWeekAndMonth(ind, "Month", new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1));
+
+
+            List<Statistic> resList = new List<Statistic>() { };
+
+            decimal[] temp1 = new decimal[result.GetLength(1)];
+            decimal[] temp2 = new decimal[result.GetLength(1)];
+
+            for (int i = 0; i < result.GetLength(1); i++)
+            {
+                temp1[i] = result[0, i].Value;
+                temp2[i] = result[1, i].Value;
+            }
+
+            resList.Add(new Statistic { temperature = temp1, humidity = temp2 });
+
+            return resList;
+        }
+
+        private decimal?[,] getIndicatorForDay(List<Indicators_i> indicator)
+        {
+            DateTime d = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+            
+            decimal?[,] result = new decimal?[2, 24];
+
+            decimal? temp = 0, hum = 0;
+            int k = 0, j = 0;
+
+            while (d.Hour <= DateTime.Now.AddHours(2).Hour)
+            {
+                int dsss = DateTime.Now.AddHours(2).Hour;
+                int ddsss = d.Hour;
+
+                for (int i = 0; i < indicator.Count; i++)
+                {
+                    if (indicator[i].DataTime >= d && indicator[i].DataTime <= d.AddHours(1))
                     {
-                        IdIndicators = c.IdIndicators,
-                        IdFridge = c.IdFridge,
-                        Temperature = c.Temperature,
-                        Humidity = c.Humidity,
-                        DataTime = DateTime.Parse(c.DataTime)
-                    });
+                        temp += indicator[i].Temperature;
+                        hum += indicator[i].Humidity;
+                        j++;
+                    }
+                }
+
+                if (j != 0)
+                {
+                    result[0,k] = temp / j;
+                    result[1,k] = hum / j;
+                }
+                else
+                {
+                    result[0,k] = 0;
+                    result[1,k] = 0;
+                }
+
+                d = d.AddHours(1);
+                k++; j = 0; temp = 0; hum = 0;
+            }
+
+            for (int i = 0; i < result.GetLength(1); i++)
+            {
+                if (result[0, i] == null)
+                    result[0, i] = 0;
+                if (result[1, i] == null)
+                    result[1, i] = 0;
+            }
+
+            return result;
+        }
+
+        private decimal?[,] getIndicatorForWeekAndMonth(List<Indicators_i> indicator, string period, DateTime d)
+        {
+            decimal?[,] result = new decimal?[2, 0];
+
+            if (period == "Week")
+                result = new decimal?[2, 7];
+            else if (period == "Month")
+                result = new decimal?[2, DateTime.Now.Day];
+
+            decimal? temp = 0, hum = 0;
+            int k = 0, j = 0;
+
+            while (d.Day <= DateTime.Now.Day)
+            {
+                for (int i = 0; i < indicator.Count; i++)
+                {
+                    if (indicator[i].DataTime >= d && indicator[i].DataTime <= d.AddDays(1))
+                    {
+                        temp += indicator[i].Temperature;
+                        hum += indicator[i].Humidity;
+                        j++;
+                    }
+                }
+
+                if (j != 0)
+                {
+                    result[0,k] = temp / j;
+                    result[1,k] = hum / j;
+                }
+                else
+                {
+                    result[0,k] = 0;
+                    result[1,k] = 0;
+                }
+
+                d = d.AddDays(1);
+                k++; j = 0; temp = 0; hum = 0;
+            }
+
+            for (int i = 0; i < result.GetLength(1); i++)
+            {
+                if (result[0, i] == null)
+                    result[0, i] = 0;
+                if (result[1, i] == null)
+                    result[1, i] = 0;
+            }
 
             return result;
         }

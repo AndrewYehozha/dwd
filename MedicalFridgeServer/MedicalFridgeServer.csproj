@@ -355,6 +355,7 @@
       <DependentUpon>Model1.edmx</DependentUpon>
       <LastGenOutput>Model1.Context.cs</LastGenOutput>
     </Content>
+    <Content Include="Models\Model1.edmx.sql" />
     <Content Include="Models\Model1.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>Model1.edmx</DependentUpon>
@@ -366,6 +367,8 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Classes\Fridge_f.cs" />
     <Compile Include="Classes\Medicament_m.cs" />
+    <Compile Include="Classes\Security.cs" />
+    <Compile Include="Classes\Statistic.cs" />
     <Compile Include="Classes\User_u.cs" />
     <Compile Include="Classes\WriteOff.cs" />
     <Compile Include="Controllers\FridgesController.cs" />
@@ -418,6 +421,7 @@
     <None Include="Properties\PublishProfiles\MedicalFridgeServer - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\MedicalFridgeServer - Web Deploy1.pubxml" />
     <None Include="Properties\PublishProfiles\MedicalFridgeServer - Web Deploy3.pubxml" />
+    <None Include="Properties\PublishProfiles\MyMedicalFridgeServer - Web Deploy.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

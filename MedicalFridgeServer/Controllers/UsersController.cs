@@ -96,6 +96,8 @@ namespace MedicalFridgeServer.Controllers
         [HttpGet]
         public IEnumerable<User_u> GetUserPass(string value1, string value2)
         {
+            value2 = Security.GetMd5Hash(value2).Trim();
+
             var user = (from User in db.Users
                         select new
                         {
@@ -108,8 +110,8 @@ namespace MedicalFridgeServer.Controllers
                             User.Country,
                             User.City,
                             User.Address
-                        }).Where(i => (i.Login.Trim() == value1.Trim()) && (i.Password.Trim() == value2.Trim()));
-
+                        }).Where(i => (i.Login.Trim() == value1.Trim()) && (i.Password.Trim() == value2));
+            
             List<User_u> result = new List<User_u>() { };
 
             foreach (var c in user)
@@ -131,10 +133,13 @@ namespace MedicalFridgeServer.Controllers
 
         // PUT: api/Users/id
         [HttpPut]
-        public bool PutUser(int id, Users user)
+        public IEnumerable<User_u> PutUser(int id, Users user)
         {
             if (id != user.IdUser)
-                return false;
+                return null;
+
+            string pass = user.Password;
+            user.Password = Security.GetMd5Hash(user.Password);
 
             var c = (from User in db.Users
                      select new { User.Login, User.IdUser }
@@ -143,18 +148,17 @@ namespace MedicalFridgeServer.Controllers
             if (c.Count() == 0)
                 db.Entry(user).State = EntityState.Modified;
             else
-                return false;
+                return null;
 
             try
             {
                 db.SaveChanges();
+                return GetUserPass(user.Login, pass);
             }
             catch (DbUpdateConcurrencyException)
             {
-                return false;
+                return null;
             }
-
-            return true;
         }
 
         // POST: api/Users
@@ -169,6 +173,7 @@ namespace MedicalFridgeServer.Controllers
             {
                 user.IdUser = 0;
                 user.Role = "User";
+                user.Password = Security.GetMd5Hash(user.Password);
                 db.Users.Add(user);
                 db.SaveChanges();
 
